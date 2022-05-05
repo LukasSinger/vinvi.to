@@ -1,0 +1,16 @@
+{
+  "main": "main.js",
+  "engines": {
+    "node": "16.14.2"
+  },
+  "dependencies": {
+    "dotenv": "16.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.16"
+  },
+  "scripts": {
+    "start": "node main.js",
+    "devstart": "nodemon --watch main.js main.js"
+  }
+}
