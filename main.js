@@ -1,19 +1,18 @@
 require("dotenv").config();
-let https = require("https");
-let url = require("url");
-let fs = require("fs");
+const http = require("http");
+const url = require("url");
+const fs = require("fs");
 
-https
+http
   .createServer((req, res) => handleRequest(req, res))
   .listen({
     host: "localhost",
-    port: 8080
+    port: 907
   });
 
 console.log("The server is now listening for requests.");
 
 function handleRequest(req, res) {
-  console.log("Request received.");
   let q = url.parse(req.url, true);
   let file;
   file =
