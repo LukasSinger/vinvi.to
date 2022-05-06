@@ -7,7 +7,7 @@ http
   .createServer((req, res) => handleRequest(req, res))
   .listen({
     host: "localhost",
-    port: 907
+    port: 667
   });
 
 console.log("The server is now listening for requests.");
