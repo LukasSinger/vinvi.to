@@ -15,11 +15,16 @@ console.log("The server is now listening for requests.");
 function handleRequest(req, res) {
   let q = url.parse(req.url, true);
   let file;
-  file =
-    q.pathname == "/"
-      ? "public/pages/index.html"
-      : `public/pages/${q.pathname}.html`;
-  return servePage(file, res);
+  if (q.query.title) {
+    let db = JSON.parse(fs.readFileSync("database/database.json"));
+    db.push(q.query);
+    fs.writeFileSync("database/database.json", JSON.stringify(db));
+    servePage("public/pages/index.html", res);
+  } else {
+    file =
+      q.pathname == "/" ? "public/pages/index.html" : `public/${q.pathname}`;
+    return servePage(file, res);
+  }
 }
 
 function servePage(file, res) {

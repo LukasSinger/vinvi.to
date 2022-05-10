@@ -2,13 +2,60 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Untitled Content Commerce Site</title>
+    <title>Untitled Story Commerce Site</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/index.css" />
   </head>
   <body>
-    <h1>Welcome to Untitled Content Commerce Site</h1>
-    <p>
-      This is a really bad name tbh but better than the first one *shudders*
-    </p>
+    <h1>Create a new story</h1>
+    <form>
+      <div>
+        <label for="title">Title</label>
+        <br />
+        <span>Keep it relevant and interesting.</span>
+        <br />
+        <input type="text" name="title" id="title" required />
+      </div>
+      <br />
+      <div>
+        <label for="description">Description</label>
+        <br />
+        <span>(Optional) Give a brief synopsis of your story.</span>
+        <br />
+        <input type="text" name="description" id="description" />
+      </div>
+      <br />
+      <div>
+        <label for="tags">Tags</label>
+        <br />
+        <span
+          >(Optional) Specify the genre and setting of your story. Max of
+          3.</span
+        >
+        <br />
+        <input type="text" name="tags" id="tags" />
+      </div>
+      <br />
+      <div>
+        <label for="content">Content</label>
+        <br />
+        <span>Write your story here.</span>
+        <br />
+        <textarea type="text" name="content" id="content" required></textarea>
+      </div>
+      <br />
+      <div>
+        <label for="cover">Cover</label>
+        <br />
+        <span
+          >(Optional) Upload a book cover for your story. We recommend an aspect
+          ratio of 9:13.</span
+        >
+        <br />
+        <input type="file" accept="image/*" name="content" id="content" />
+      </div>
+      <br />
+      <button data-submit>Submit</button>
+    </form>
   </body>
 </html>
