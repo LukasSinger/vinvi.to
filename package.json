@@ -12,7 +12,8 @@
   },
   "scripts": {
     "start": "node main.js",
-    "devstart": "nodemon -e js main.js"
+    "devstart": "nodemon -e js main.js",
+    "clearDb": "node clearDb.js"
   },
   "nodemonConfig": {
     "ignore": [

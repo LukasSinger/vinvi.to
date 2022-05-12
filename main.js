@@ -3,6 +3,9 @@ const http = require("http");
 const url = require("url");
 const fs = require("fs");
 
+let currentIdTime;
+let currentIds;
+
 http
   .createServer((req, res) => handleRequest(req, res))
   .listen({
@@ -13,11 +16,20 @@ http
 console.log("The server is now listening for requests.");
 
 function handleRequest(req, res) {
+  console.log(req.read());
   let q = url.parse(req.url, true);
   let file;
   if (q.query.title) {
-    let db = JSON.parse(fs.readFileSync("database/database.json"));
-    db.push(q.query);
+    if (currentIdTime != Date.now()) {
+      currentIdTime = Date.now();
+      currentIds = 0;
+    }
+    let thisId = Date.now().toString() + currentIds;
+    currentIds++;
+    let db = fs.readFileSync("database/database.json");
+    if (db.length == 0) db = {};
+    else db = JSON.parse(db);
+    db[thisId] = q.query;
     fs.writeFileSync("database/database.json", JSON.stringify(db));
     servePage("public/pages/index.html", res);
   } else {
