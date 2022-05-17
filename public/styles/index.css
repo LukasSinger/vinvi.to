@@ -1,3 +1,29 @@
-span {
-  font-size: 9px;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.shadow {
+  -webkit-box-shadow: 10px 10px 0px 1px #000000;
+  box-shadow: 10px 10px 0px 1px #000000;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: black;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #84cc16;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #84cc16;
 }
