@@ -10,7 +10,7 @@ let currentIds;
 http
   .createServer((req, res) => handleRequest(req, res))
   .listen({
-    host: "localhost",
+    host: process.env.HOST,
     port: 16677
   });
 
