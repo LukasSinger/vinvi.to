@@ -13,8 +13,8 @@
     "tailwindcss": "^3.0.24"
   },
   "scripts": {
-    "start": "npm i && cross-env HOST=saturn.rochesterschools.org node main.js",
-    "devstart": "npm i && cross-env HOST=localhost nodemon -e js main.js",
+    "start": "npm i && cross-env DEPLOY_MODE=true node main.js",
+    "devstart": "npm i && nodemon -e js main.js",
     "clearDb": "node clearDb.js"
   },
   "nodemonConfig": {
