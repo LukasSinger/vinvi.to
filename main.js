@@ -1,93 +1,83 @@
 require("dotenv").config();
 const http = require("http");
-const url = require("url");
 const fs = require("fs");
-const { parse } = require("path");
+const express = require("express");
+const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 const DATABASE_LOCATION = "database/database.json";
 const HOST = process.env.DEPLOY_MODE
   ? "saturn.rochesterschools.org"
   : "localhost";
+const PORT = 16677;
 
 let currentIdTime;
 let currentIds;
 
-bootServer();
+app
+  .listen(PORT, HOST)
+  .on("listen", () => {
+    console.log("The server is now listening for requests.");
+  })
+  .on("error", () => {
+    console.log(
+      "You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead."
+    );
+  });
 
-function bootServer() {
-  http
-    .createServer((req, res) => {
-      runSafelyInDeployment(
-        () => handleRequest(req, res),
-        "Something went wrong while handling the request.",
-        true
-      );
-    })
-    .listen({
-      host: HOST,
-      port: 16677,
-    })
-    .on("listen", () => {
-      console.log("The server is now listening for requests.");
-    })
-    .on("error", () => {
-      console.log(
-        "You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead."
-      );
-    });
-}
+app.get(/.*/, (req, res) => {
+  runSafelyInDeployment(
+    () => handleRequest(req, res),
+    "Something went wrong while handling the request.",
+    true
+  );
+});
 
-function handleRequest(req, res) {
-  let q = new URL(req.url, `http://${req.host}`);
-  let file;
-  if (q.pathname == "/api") {
-    handleAPIRequest(req, res);
-  } else {
-    file =
-      q.pathname == "/" ? "public/pages/index.html" : `public/${q.pathname}`;
-    return servePage(file, res);
-  }
-}
-
-function handleAPIRequest(req, res) {
+app.post("/api", (req, res) => {
   console.log(req);
-  if (currentIdTime != Date.now()) {
-    currentIdTime = Date.now();
-    currentIds = 0;
-  }
-  let thisId = Date.now().toString() + currentIds;
-  currentIds++;
-
   let db;
+  let id = getUniqueId();
   if (!fs.existsSync(DATABASE_LOCATION)) db = "";
-  else db = fs.readFileSync("database/database.json");
+  else db = fs.readFileSync(DATABASE_LOCATION);
   if (db.length == 0) db = {};
   else db = JSON.parse(db);
-  db[thisId] = parseRequestData(req);
-  fs.writeFileSync("database/database.json", JSON.stringify(db));
+  db[id] = req.body;
+  fs.writeFile(DATABASE_LOCATION, JSON.stringify(db), (err) => {
+    if (err) throw err;
+  });
   servePage("public/pages/index.html", res);
+});
+
+function handleRequest(req, res) {
+  file = req.path == "/" ? "public/pages/index.html" : `public/${req.path}`;
+  servePage(file, res);
 }
 
 function servePage(file, res) {
   fs.readFile(file, (err, data) => {
     if (err) {
       res.writeHead(404, { "Content-Type": "text/html" });
-      return res.end("We couldn't find what you requested (404)");
+      res.end("We couldn't find what you requested (404)");
+      return;
     }
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write(data);
-    return res.end();
+    res.end();
   });
 }
 
-function parseRequestData(req) {
-  let data = "";
-  req.on("data", (chunk) => {
-    data += chunk.toString();
-  });
-  return req.on("end", () => {
-    return parse(body);
-  });
+/**
+ * Generates a unique ID based on time and order generated.
+ * @returns A unique numeric ID.
+ */
+function getUniqueId() {
+  if (currentIdTime != Date.now()) {
+    currentIdTime = Date.now();
+    currentIds = 0;
+  }
+  let id = Date.now().toString() + currentIds;
+  currentIds++;
+  return id;
 }
 
 /**
