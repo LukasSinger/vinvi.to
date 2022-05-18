@@ -12,12 +12,7 @@ const HOST = process.env.DEPLOY_MODE
 let currentIdTime;
 let currentIds;
 
-runSafelyInDeployment(
-  () => bootServer(),
-  "You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead."
-);
-
-console.log("The server is now listening for requests.");
+bootServer();
 
 function bootServer() {
   http
@@ -30,7 +25,15 @@ function bootServer() {
     })
     .listen({
       host: HOST,
-      port: 16677
+      port: 16677,
+    })
+    .on("listen", () => {
+      console.log("The server is now listening for requests.");
+    })
+    .on("error", () => {
+      console.log(
+        "You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead."
+      );
     });
 }
 
@@ -47,6 +50,7 @@ function handleRequest(req, res) {
 }
 
 function handleAPIRequest(req, res) {
+  console.log(req);
   if (currentIdTime != Date.now()) {
     currentIdTime = Date.now();
     currentIds = 0;
@@ -60,7 +64,6 @@ function handleAPIRequest(req, res) {
   if (db.length == 0) db = {};
   else db = JSON.parse(db);
   db[thisId] = parseRequestData(req);
-  console.log(db);
   fs.writeFileSync("database/database.json", JSON.stringify(db));
   servePage("public/pages/index.html", res);
 }
