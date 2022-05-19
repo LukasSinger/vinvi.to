@@ -15,7 +15,7 @@
     "tailwindcss": "^3.0.24"
   },
   "scripts": {
-    "start": "npm i && cross-env DEPLOY_MODE=true npx pm2 start main.js -i max --attach",
+    "start": "npm i && cross-env NODE_ENV=production npx pm2 start main.js -i max --attach",
     "devstart": "npm i && nodemon -e js main.js",
     "clearDb": "node clearDb.js"
   },
