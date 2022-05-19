@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>Create a new story</h1>
-    <form method="POST" action="/api" enctype="multipart/form-data">
+    <form>
       <div>
         <label for="title">Title</label>
         <br />
@@ -55,7 +55,14 @@
         <input type="file" accept="image/*" name="cover" id="cover" />
       </div>
       <br />
-      <button data-submit>Submit! Resistance is futile!</button>
+      <button
+        formaction="/api"
+        formmethod="POST"
+        formenctype="multipart/form-data"
+        data-submit
+      >
+        Submit! Resistance is futile!
+      </button>
     </form>
   </body>
 </html>

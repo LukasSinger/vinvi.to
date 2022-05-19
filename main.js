@@ -1,11 +1,12 @@
 require("dotenv").config();
 const http = require("http");
 const fs = require("fs");
+const formidable = require("formidable");
 const express = require("express");
 const app = express();
-app.use(express.urlencoded({ extended: true }));
 
-const DATABASE_LOCATION = "database/database.json";
+const DB_DIR = "database";
+const DB_LOCATION = DB_DIR + "/database.json";
 const HOST = process.env.DEPLOY_MODE
   ? "saturn.rochesterschools.org"
   : "localhost";
@@ -34,17 +35,33 @@ app.get(/.*/, (req, res) => {
 });
 
 app.post("/api", (req, res) => {
-  console.log(req);
   let db;
   let id = getUniqueId();
-  if (!fs.existsSync(DATABASE_LOCATION)) db = "";
-  else db = fs.readFileSync(DATABASE_LOCATION);
+  if (!fs.existsSync(DB_LOCATION)) {
+    // The database hasn't been created or has been compromised
+    fs.mkdirSync(DB_DIR);
+    fs.mkdirSync(DB_DIR + "/img");
+    db = "";
+  } else db = fs.readFileSync(DB_LOCATION);
   if (db.length == 0) db = {};
   else db = JSON.parse(db);
-  db[id] = req.body;
-  fs.writeFile(DATABASE_LOCATION, JSON.stringify(db), (err) => {
-    if (err) throw err;
+
+  let form = new formidable.IncomingForm();
+  form.parse(req, (err, fields, files) => {
+    // Store the cover image
+    let coverImg = files["cover"];
+    let newCoverPath = DB_DIR + "/img/" + coverImg.originalFilename;
+    fs.rename(coverImg.filepath, newCoverPath, (err) => {
+      if (err) throw err;
+    });
+    // Store the metadata and story content
+    fields.cover = newCoverPath;
+    db[id] = fields;
+    fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
+      if (err) throw err;
+    });
   });
+
   servePage("public/pages/index.html", res);
 });
 

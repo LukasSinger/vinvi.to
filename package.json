@@ -7,7 +7,8 @@
     "@tailwindcss/line-clamp": "^0.4.0",
     "cross-env": "7.0.3",
     "dotenv": "16.0.0",
-    "express": "4.18.1"
+    "express": "4.18.1",
+    "formidable": "2.0.1"
   },
   "devDependencies": {
     "nodemon": "2.0.16",
