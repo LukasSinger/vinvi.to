@@ -5,6 +5,7 @@ const app = express();
 app.use(express.static("public"));
 
 const DB_DIR = "database";
+const PUBLIC_DB_DIR = "public/publicDb";
 const DB_LOCATION = DB_DIR + "/database.json";
 const HOST = process.env.NODE_ENV ? "saturn.rochesterschools.org" : "localhost";
 const PORT = process.env.NODE_ENV ? 16677 : 16667;
@@ -56,7 +57,7 @@ app.post("/api", (req, res) => {
   form.parse(req, (err, fields, files) => {
     // Store the cover image
     let coverImg = files["cover"];
-    let newCoverPath = DB_DIR + "/img/" + coverImg.originalFilename;
+    let newCoverPath = PUBLIC_DB_DIR + "/img/" + coverImg.originalFilename;
     fs.rename(coverImg.filepath, newCoverPath, (err) => {
       if (err) throw err;
     });
@@ -116,7 +117,7 @@ function getDb() {
   if (!fs.existsSync(DB_LOCATION)) {
     // The database hasn't been created or has been compromised
     fs.mkdirSync(DB_DIR);
-    fs.mkdirSync(DB_DIR + "/img");
+    fs.mkdirSync(PUBLIC_DB_DIR + "/img");
     db = "";
   } else db = fs.readFileSync(DB_LOCATION);
   if (db.length == 0) db = {};
