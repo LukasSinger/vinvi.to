@@ -3,9 +3,12 @@ const formidable = require("formidable");
 const express = require("express");
 const app = express();
 app.use(express.static("public"));
+app.set("view engine", "ejs");
 
+const PUBLIC_DIR = "public";
 const DB_DIR = "database";
-const PUBLIC_DB_DIR = "public/publicDb";
+const PUBLIC_DB_DIR_NAME = "publicDb";
+const PUBLIC_DB_DIR = `${PUBLIC_DIR}/${PUBLIC_DB_DIR_NAME}`;
 const DB_LOCATION = DB_DIR + "/database.json";
 const HOST = process.env.NODE_ENV ? "saturn.rochesterschools.org" : "localhost";
 const PORT = process.env.NODE_ENV ? 16677 : 16667;
@@ -39,7 +42,7 @@ app.post("/api/users/new", (req, res) => {
   let db = getDb();
   let id = getUniqueId();
   let form = new formidable.IncomingForm();
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, (err, fields) => {
     // Store the new user's data
     db.users[id] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
@@ -48,7 +51,7 @@ app.post("/api/users/new", (req, res) => {
   });
 
   servePage("/home", res);
-})
+});
 
 // Serve story page if a story with the specified ID exists
 app.get("/story/:id(\\d+)", (req, res) => {
@@ -72,7 +75,7 @@ app.post("/api/story/new", (req, res) => {
   form.parse(req, (err, fields, files) => {
     // Store the cover image
     let coverImg = files["cover"];
-    let newCoverPath = PUBLIC_DB_DIR + "/img/" + coverImg.originalFilename;
+    let newCoverPath = `${PUBLIC_DB_DIR}/img/${coverImg.originalFilename}`;
     fs.rename(coverImg.filepath, newCoverPath, (err) => {
       if (err) throw err;
     });
@@ -97,15 +100,13 @@ app.use((req, res) => {
  * @param {string} file The requested path.
  * @param {http.ServerResponse} res The response object to write to.
  */
-function servePage(path, res, was404) {
-  let file = `public/${staticPathMappings[path]}`;
-  fs.readFile(file, (err, data) => {
+function servePage(path, res, vars, was404) {
+  let file = `${PUBLIC_DIR}/${staticPathMappings[path]}`;
+  res.render(file, vars, (err) => {
     if (err) {
       if (was404) throw err;
-      servePage("/404", res, true);
-      return;
+      servePage("/404", res, vars, true);
     }
-    writeToRes(res, 200, "text/html", data);
   });
 }
 
@@ -114,10 +115,12 @@ function servePage(path, res, was404) {
  * @param {http.ServerResponse} res The response to write to.
  * @param {number} status The status code to send.
  * @param {string} type The Content-Type of the data being sent.
- * @param {string | object} data The data to send.
+ * @param {string | Buffer | object} data The data to send.
  */
 function writeToRes(res, status, type, data) {
-  if (typeof data == "object") data = JSON.stringify(data);
+  if (typeof data != "string" && !(data instanceof Buffer)) {
+    data = JSON.stringify(data);
+  }
   res.writeHead(status, { "Content-Type": type });
   res.write(data);
   res.end();
@@ -132,11 +135,15 @@ function getDb() {
   if (!fs.existsSync(DB_LOCATION)) {
     // The database hasn't been created or has been compromised
     fs.mkdirSync(DB_DIR);
+    fs.mkdirSync(PUBLIC_DB_DIR);
     fs.mkdirSync(PUBLIC_DB_DIR + "/img");
     db = "";
   } else db = fs.readFileSync(DB_LOCATION);
-  if (db.length == 0) db = {};
-  else db = JSON.parse(db);
+  if (db.length == 0) {
+    db = {};
+    db.stories = {};
+    db.users = {};
+  } else db = JSON.parse(db);
   return db;
 }
 
