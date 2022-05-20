@@ -1,5 +1,4 @@
-# Vinvi.to
-Your Place
+# vinvi.to
 
 Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace.
 
