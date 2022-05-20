@@ -35,6 +35,21 @@ app
     else throw err;
   });
 
+app.post("/api/users/new", (req, res) => {
+  let db = getDb();
+  let id = getUniqueId();
+  let form = new formidable.IncomingForm();
+  form.parse(req, (err, fields, files) => {
+    // Store the new user's data
+    db.users[id] = fields;
+    fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
+      if (err) throw err;
+    });
+  });
+
+  servePage("/home", res);
+})
+
 // Serve story page if a story with the specified ID exists
 app.get("/story/:id(\\d+)", (req, res) => {
   let dbEntry = getDb().stories[req.params.id];
@@ -49,8 +64,8 @@ app.get("/api/story/:id", (req, res) => {
   else writeToRes(res, 404, "text/html", "404");
 });
 
-// Handle POST requests to the API
-app.post("/api", (req, res) => {
+// Handle new story request
+app.post("/api/story/new", (req, res) => {
   let db = getDb();
   let id = getUniqueId();
   let form = new formidable.IncomingForm();
