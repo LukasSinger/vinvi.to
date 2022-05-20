@@ -1,5 +1,3 @@
-require("dotenv").config();
-const http = require("http");
 const fs = require("fs");
 const formidable = require("formidable");
 const express = require("express");
@@ -14,6 +12,7 @@ const PORT = process.env.NODE_ENV ? 16677 : 16667;
 const staticPathMappings = {
   "/": "pages/home.html",
   "/home": "pages/home.html",
+  "/story": "pages/read-book.html",
   "/new": "pages/start-writing.html",
   "/library": "pages/your-library.html",
   "/404": "pages/blank-page.html"
@@ -35,24 +34,24 @@ app
     else throw err;
   });
 
-// Serves static pages
-app.use((req, res) => {
-  servePage(req.path, res);
+// Serve story page if a story with the specified ID exists
+app.get("/story/:id(\\d+)", (req, res) => {
+  let dbEntry = getDb().stories[req.params.id];
+  if (dbEntry) servePage("/story", res);
+  else servePage("/404", res);
 });
 
-// Responds to API requests
-app.post("/api", (req, res) => {
-  let db;
-  let id = getUniqueId();
-  if (!fs.existsSync(DB_LOCATION)) {
-    // The database hasn't been created or has been compromised
-    fs.mkdirSync(DB_DIR);
-    fs.mkdirSync(DB_DIR + "/img");
-    db = "";
-  } else db = fs.readFileSync(DB_LOCATION);
-  if (db.length == 0) db = {};
-  else db = JSON.parse(db);
+// Handle story content request
+app.get("/api/story/:id", (req, res) => {
+  let dbEntry = getDb().stories[req.params.id];
+  if (dbEntry) writeToRes(res, 200, "application/json", dbEntry);
+  else writeToRes(res, 404, "text/html", "404");
+});
 
+// Handle POST requests to the API
+app.post("/api", (req, res) => {
+  let db = getDb();
+  let id = getUniqueId();
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     // Store the cover image
@@ -63,13 +62,18 @@ app.post("/api", (req, res) => {
     });
     // Store the metadata and story content
     fields.cover = newCoverPath;
-    db[id] = fields;
+    db.stories[id] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
       if (err) throw err;
     });
   });
 
   servePage("/home", res);
+});
+
+// Serve static pages
+app.use((req, res) => {
+  servePage(req.path, res);
 });
 
 /**
@@ -85,10 +89,39 @@ function servePage(path, res, was404) {
       servePage("/404", res, true);
       return;
     }
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write(data);
-    res.end();
+    writeToRes(res, 200, "text/html", data);
   });
+}
+
+/**
+ * Writes data to the response sent by the server.
+ * @param {http.ServerResponse} res The response to write to.
+ * @param {number} status The status code to send.
+ * @param {string} type The Content-Type of the data being sent.
+ * @param {string | object} data The data to send.
+ */
+function writeToRes(res, status, type, data) {
+  if (typeof data == "object") data = JSON.stringify(data);
+  res.writeHead(status, { "Content-Type": type });
+  res.write(data);
+  res.end();
+}
+
+/**
+ * Retrieves the database object, or creates one if it does not exist.
+ * @returns The database object.
+ */
+function getDb() {
+  let db;
+  if (!fs.existsSync(DB_LOCATION)) {
+    // The database hasn't been created or has been compromised
+    fs.mkdirSync(DB_DIR);
+    fs.mkdirSync(DB_DIR + "/img");
+    db = "";
+  } else db = fs.readFileSync(DB_LOCATION);
+  if (db.length == 0) db = {};
+  else db = JSON.parse(db);
+  return db;
 }
 
 /**
