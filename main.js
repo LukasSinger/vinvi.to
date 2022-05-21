@@ -2,8 +2,6 @@ const fs = require("fs");
 const formidable = require("formidable");
 const express = require("express");
 const app = express();
-app.use(express.static("public"));
-app.set("view engine", "ejs");
 
 const PUBLIC_DIR = "public";
 const DB_DIR = "database";
@@ -25,9 +23,14 @@ const staticPathMappings = {
 let currentIdTime;
 let currentIds;
 
+app.use(express.static(PUBLIC_DIR));
+app.engine(".html", require("ejs").__express);
+app.set("views", __dirname);
+app.set("view engine", "html");
+
 app
   .listen(PORT, HOST)
-  .on("listen", () => {
+  .on("listening", () => {
     console.log("The server is now listening for requests.");
   })
   .on("error", (err) => {
@@ -38,11 +41,12 @@ app
     else throw err;
   });
 
-app.post("/api/users/new", (req, res) => {
+app.post("/api/user/new", (req, res) => {
   let db = getDb();
   let id = getUniqueId();
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields) => {
+    if (err) throw err;
     // Store the new user's data
     db.users[id] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
@@ -100,13 +104,16 @@ app.use((req, res) => {
  * @param {string} file The requested path.
  * @param {http.ServerResponse} res The response object to write to.
  */
-function servePage(path, res, vars, was404) {
+function servePage(path, res, was404) {
   let file = `${PUBLIC_DIR}/${staticPathMappings[path]}`;
-  res.render(file, vars, (err) => {
+  res.render(file, (err, data) => {
     if (err) {
       if (was404) throw err;
-      servePage("/404", res, vars, true);
+      // if (!process.env.NODE_ENV) console.log(err);
+      servePage("/404", res, true);
+      return;
     }
+    writeToRes(res, 200, "text/html", data);
   });
 }
 

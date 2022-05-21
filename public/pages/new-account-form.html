@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Untitled Story Commerce Site</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/index.css" />
+  </head>
+  <body>
+    <h1>Create a new account</h1>
+    <form>
+      <div>
+        <label for="email">Email address</label>
+        <br />
+        <span>Keep it relevant and interesting.</span>
+        <br />
+        <input type="text" name="email" id="email" required />
+      </div>
+      <br />
+      <div>
+        <label for="username">Username</label>
+        <br />
+        <span>Give a brief synopsis of your story.</span>
+        <br />
+        <input type="text" name="username" id="username" />
+      </div>
+      <br />
+      <div>
+        <label for="password">Password</label>
+        <br />
+        <span>Specify the genre and setting of your story. Max of 3.</span>
+        <br />
+        <input type="text" name="password" id="password" />
+      </div>
+      <br />
+      <button
+        formaction="/api/user/new"
+        formmethod="POST"
+        formenctype="multipart/form-data"
+        data-submit
+      >
+        Submit! Resistance is futile!
+      </button>
+    </form>
+  </body>
+</html>
