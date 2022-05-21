@@ -41,14 +41,14 @@ app
     else throw err;
   });
 
+// Handle new user request
 app.post("/api/user/new", (req, res) => {
   let db = getDb();
-  let id = getUniqueId();
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields) => {
     if (err) throw err;
     // Store the new user's data
-    db.users[id] = fields;
+    db.users[fields.username] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
       if (err) throw err;
     });
@@ -57,7 +57,7 @@ app.post("/api/user/new", (req, res) => {
   servePage("/home", res);
 });
 
-// Serve story page if a story with the specified ID exists
+// Serve story page
 app.get("/story/:id(\\d+)", (req, res) => {
   let dbEntry = getDb().stories[req.params.id];
   if (dbEntry) servePage("/story", res);
@@ -66,9 +66,15 @@ app.get("/story/:id(\\d+)", (req, res) => {
 
 // Handle story content request
 app.get("/api/story/:id", (req, res) => {
-  let dbEntry = getDb().stories[req.params.id];
-  if (dbEntry) writeToRes(res, 200, "application/json", dbEntry);
-  else writeToRes(res, 404, "text/html", "404");
+  let db = getDb();
+  let dbEntry = db.stories[req.params.id];
+  if (dbEntry) {
+    let reqUser = req.headers["x-user"];
+    let reqPass = req.headers["x-pass"];
+    if (reqUser == dbEntry.username && isValidCredentials(db, reqUser, reqPass))
+      writeToRes(res, 200, "application/json", dbEntry);
+    else writeToRes(res, 403, "text/html", "Locked to content creator");
+  } else writeToRes(res, 404, "text/html", "404");
 });
 
 // Handle new story request
@@ -77,21 +83,29 @@ app.post("/api/story/new", (req, res) => {
   let id = getUniqueId();
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
-    // Store the cover image
-    let coverImg = files["cover"];
-    let newCoverPath = `${PUBLIC_DB_DIR}/img/${coverImg.originalFilename}`;
-    fs.rename(coverImg.filepath, newCoverPath, (err) => {
-      if (err) throw err;
-    });
-    // Store the metadata and story content
-    fields.cover = newCoverPath;
-    db.stories[id] = fields;
-    fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
-      if (err) throw err;
-    });
+    // Check for valid authentication
+    if (isValidCredentials(db, fields.username, fields.password)) {
+      // Don't include password in database entry
+      delete fields.password;
+      // Store the cover image, if there is one
+      let coverImg = files["cover"];
+      if (coverImg.originalFilename) {
+        let newCoverPath = `${PUBLIC_DB_DIR}/img/${coverImg.originalFilename}`;
+        fields.cover = newCoverPath;
+        fs.rename(coverImg.filepath, newCoverPath, (err) => {
+          if (err) throw err;
+        });
+      }
+      // Store the metadata and story content
+      db.stories[id] = fields;
+      fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
+        if (err) throw err;
+      });
+      writeToRes(res, 200, "text/html", "Submitted successfully");
+    } else {
+      writeToRes(res, 401, "text/html", "Invalid credentials");
+    }
   });
-
-  servePage("/home", res);
 });
 
 // Serve static pages
@@ -104,17 +118,17 @@ app.use((req, res) => {
  * @param {string} file The requested path.
  * @param {http.ServerResponse} res The response object to write to.
  */
-function servePage(path, res, was404) {
+function servePage(path, res, vars, was404) {
   let file = `${PUBLIC_DIR}/${staticPathMappings[path]}`;
-  res.render(file, (err, data) => {
-    if (err) {
-      if (was404) throw err;
-      // if (!process.env.NODE_ENV) console.log(err);
-      servePage("/404", res, true);
-      return;
-    }
-    writeToRes(res, 200, "text/html", data);
-  });
+  if (fs.existsSync(file)) {
+    res.render(file, vars, (err, data) => {
+      if (err) throw err;
+      if (was404) writeToRes(res, 404, "text/html", data);
+      else writeToRes(res, 200, "text/html", data);
+    });
+  } else {
+    servePage("/404", res, vars, true);
+  }
 }
 
 /**
@@ -131,6 +145,18 @@ function writeToRes(res, status, type, data) {
   res.writeHead(status, { "Content-Type": type });
   res.write(data);
   res.end();
+}
+
+/**
+ * Evaluates the given username and password.
+ * @param {object} db The database to validate against.
+ * @param {string} username The username.
+ * @param {string} password The password.
+ * @returns {boolean} Whether or not the given username and password are valid.
+ */
+function isValidCredentials(db, username, password) {
+  let user = db.users[username];
+  return user && password == user.password;
 }
 
 /**
