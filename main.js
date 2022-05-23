@@ -1,6 +1,7 @@
 const fs = require("fs");
 const formidable = require("formidable");
 const express = require("express");
+const session = require("express-session");
 const app = express();
 
 const PUBLIC_DIR = "public";
