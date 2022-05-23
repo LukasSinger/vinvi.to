@@ -90,9 +90,9 @@ app.post("/api/story/new", (req, res) => {
       // Store the cover image, if there is one
       let coverImg = files["cover"];
       if (coverImg.originalFilename) {
-        let newCoverPath = `${PUBLIC_DB_DIR}/img/${coverImg.originalFilename}`;
+        let newCoverPath = `/${PUBLIC_DB_DIR_NAME}/img/${coverImg.originalFilename}`;
         fields.cover = newCoverPath;
-        fs.rename(coverImg.filepath, newCoverPath, (err) => {
+        fs.rename(coverImg.filepath, PUBLIC_DIR + newCoverPath, (err) => {
           if (err) throw err;
         });
       }
@@ -123,7 +123,7 @@ function servePage(path, res, vars, was404) {
   if (fs.existsSync(file)) {
     res.render(file, vars, (err, data) => {
       if (err) throw err;
-      if (was404) writeToRes(res, 404, "text/html", data);
+      if (was404 || path == "/404") writeToRes(res, 404, "text/html", data);
       else writeToRes(res, 200, "text/html", data);
     });
   } else {
