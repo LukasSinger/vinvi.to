@@ -1,8 +1,3 @@
-const fs = require("fs");
-const formidable = require("formidable");
-const express = require("express");
-const app = express();
-
 const PUBLIC_DIR = "public";
 const DB_DIR = "database";
 const PUBLIC_DB_DIR_NAME = "publicDb";
@@ -19,6 +14,13 @@ const staticPathMappings = {
   "/library": "pages/your-library.html",
   "/404": "pages/blank-page.html"
 };
+
+const NEW_USER_BALANCE = 10;
+  
+const fs = require("fs");
+const formidable = require("formidable");
+const express = require("express");
+const app = express();
 
 let currentIdTime;
 let currentIds;
@@ -48,6 +50,7 @@ app.post("/api/user/new", (req, res) => {
   form.parse(req, (err, fields) => {
     if (err) throw err;
     // Store the new user's data
+    fields.balance = NEW_USER_BALANCE;
     db.users[fields.username] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
       if (err) throw err;
@@ -69,11 +72,11 @@ app.get("/api/story/:id", (req, res) => {
   let db = getDb();
   let dbEntry = db.stories[req.params.id];
   if (dbEntry) {
-    let reqUser = req.headers["x-user"];
-    let reqPass = req.headers["x-pass"];
-    if (reqUser == dbEntry.username && isValidCredentials(db, reqUser, reqPass))
+    authenticateRequest(dbEntry.username, req, db, () => {
       writeToRes(res, 200, "application/json", dbEntry);
-    else writeToRes(res, 403, "text/html", "Locked to content creator");
+    }, () => {
+      writeToRes(res, 403, "text/html", "Locked to content creator");
+    });
   } else writeToRes(res, 404, "text/html", "404");
 });
 
@@ -84,7 +87,7 @@ app.post("/api/story/new", (req, res) => {
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     // Check for valid authentication
-    if (isValidCredentials(db, fields.username, fields.password)) {
+    if (isValidCredentials(fields.username, fields.password, db)) {
       // Don't include password in database entry
       delete fields.password;
       // Store the cover image, if there is one
@@ -148,13 +151,28 @@ function writeToRes(res, status, type, data) {
 }
 
 /**
+ * Runs callbacks based on whether or not the information provided is successfully authenticated.
+ * @param {string} owner The username of the owner of the data that this request is trying to access.
+ * @param {http.IncomingRequest} req The request to read authentication details from.
+ * @param {object} db The database to authenticate against.
+ * @param {function} grant The callback to run if access is granted.
+ * @param {function} deny The callback to run if access is denied.
+ */
+function authenticateRequest(owner, req, db, grant, deny) {
+  let reqUser = req.headers["x-user"];
+  let reqPass = req.headers["x-pass"];
+  if (reqUser == owner && isValidCredentials(reqUser, reqPass, db)) grant();
+  else deny();
+}
+
+/**
  * Evaluates the given username and password.
- * @param {object} db The database to validate against.
  * @param {string} username The username.
  * @param {string} password The password.
+ * @param {object} db The database to validate against.
  * @returns {boolean} Whether or not the given username and password are valid.
  */
-function isValidCredentials(db, username, password) {
+function isValidCredentials(username, password, db) {
   let user = db.users[username];
   return user && password == user.password;
 }
