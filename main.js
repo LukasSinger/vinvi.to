@@ -1,8 +1,3 @@
-const fs = require("fs");
-const formidable = require("formidable");
-const express = require("express");
-const app = express();
-
 const PUBLIC_DIR = "public";
 const DB_DIR = "database";
 const PUBLIC_DB_DIR_NAME = "publicDb";
@@ -20,8 +15,25 @@ const staticPathMappings = {
   "/404": "pages/blank-page.html"
 };
 
+const NEW_USER_BALANCE = 10;
+const NEW_STORY_REWARD = 5;
+const COST_PER_WORD = 0.01;
+
+const fs = require("fs");
+const formidable = require("formidable");
+const express = require("express");
+const app = express();
+
 let currentIdTime;
 let currentIds;
+
+/**
+ * Counts the words in the provided string.
+ * @returns {number} The number of words.
+ */
+String.prototype.countWords = function () {
+  return this.trim().split(/\s+/).length;
+};
 
 app.use(express.static(PUBLIC_DIR));
 app.engine(".html", require("ejs").__express);
@@ -34,10 +46,7 @@ app
     console.log("The server is now listening for requests.");
   })
   .on("error", (err) => {
-    if (process.env.NODE_ENV)
-      console.log(
-        "You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead."
-      );
+    if (process.env.NODE_ENV) console.log("You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead.");
     else throw err;
   });
 
@@ -48,6 +57,7 @@ app.post("/api/user/new", (req, res) => {
   form.parse(req, (err, fields) => {
     if (err) throw err;
     // Store the new user's data
+    fields.balance = NEW_USER_BALANCE;
     db.users[fields.username] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
       if (err) throw err;
@@ -55,6 +65,25 @@ app.post("/api/user/new", (req, res) => {
   });
 
   servePage("/home", res);
+});
+
+// Handle user balance request
+app.get("/api/user/:id/balance", (req, res) => {
+  let db = getDb();
+  let dbEntry = db.users[req.params.id];
+  if (dbEntry) {
+    authenticateRequest(
+      dbEntry.username,
+      req,
+      db,
+      () => {
+        writeToRes(res, 200, "application/json", dbEntry.balance);
+      },
+      () => {
+        writeToRes(res, 403, "text/html", "Invalid credentials");
+      }
+    );
+  } else writeToRes(res, 404, "text/html", "404");
 });
 
 // Serve story page
@@ -69,11 +98,17 @@ app.get("/api/story/:id", (req, res) => {
   let db = getDb();
   let dbEntry = db.stories[req.params.id];
   if (dbEntry) {
-    let reqUser = req.headers["x-user"];
-    let reqPass = req.headers["x-pass"];
-    if (reqUser == dbEntry.username && isValidCredentials(db, reqUser, reqPass))
-      writeToRes(res, 200, "application/json", dbEntry);
-    else writeToRes(res, 403, "text/html", "Locked to content creator");
+    authenticateRequest(
+      dbEntry.username,
+      req,
+      db,
+      () => {
+        writeToRes(res, 200, "application/json", dbEntry);
+      },
+      () => {
+        writeToRes(res, 403, "text/html", "Locked to content creator");
+      }
+    );
   } else writeToRes(res, 404, "text/html", "404");
 });
 
@@ -84,7 +119,7 @@ app.post("/api/story/new", (req, res) => {
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
     // Check for valid authentication
-    if (isValidCredentials(db, fields.username, fields.password)) {
+    if (isValidCredentials(fields.username, fields.password, db)) {
       // Don't include password in database entry
       delete fields.password;
       // Store the cover image, if there is one
@@ -96,8 +131,13 @@ app.post("/api/story/new", (req, res) => {
           if (err) throw err;
         });
       }
+      // Calculate cost
+      fields.cost = fields.content.length;
       // Store the metadata and story content
       db.stories[id] = fields;
+      // Add balance to user's account
+      db.users[fields.username].balance += NEW_STORY_REWARD;
+      // Write to database
       fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
         if (err) throw err;
       });
@@ -148,13 +188,28 @@ function writeToRes(res, status, type, data) {
 }
 
 /**
+ * Runs callbacks based on whether or not the information provided is successfully authenticated.
+ * @param {string} owner The username of the owner of the data that this request is trying to access.
+ * @param {http.IncomingRequest} req The request to read authentication details from.
+ * @param {object} db The database to authenticate against.
+ * @param {function} grant The callback to run if access is granted.
+ * @param {function} deny The callback to run if access is denied.
+ */
+function authenticateRequest(owner, req, db, grant, deny) {
+  let reqUser = req.headers["x-user"];
+  let reqPass = req.headers["x-pass"];
+  if (reqUser == owner && isValidCredentials(reqUser, reqPass, db)) grant();
+  else deny();
+}
+
+/**
  * Evaluates the given username and password.
- * @param {object} db The database to validate against.
  * @param {string} username The username.
  * @param {string} password The password.
+ * @param {object} db The database to validate against.
  * @returns {boolean} Whether or not the given username and password are valid.
  */
-function isValidCredentials(db, username, password) {
+function isValidCredentials(username, password, db) {
   let user = db.users[username];
   return user && password == user.password;
 }

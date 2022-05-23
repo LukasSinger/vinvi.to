@@ -31,6 +31,6 @@ function togProfileInfo() {
 }
 
 function togLogin() {
-    let main = document.getElementById("login");
-    main.classList.toggle("hidden");
+  let main = document.getElementById("login");
+  main.classList.toggle("hidden");
 }

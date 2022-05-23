@@ -37,10 +37,7 @@
       <div>
         <label for="tags">Tags</label>
         <br />
-        <span
-          >(Optional) Specify the genre and setting of your story. Max of
-          3.</span
-        >
+        <span>(Optional) Specify the genre and setting of your story. Max of 3.</span>
         <br />
         <input type="text" name="tags" id="tags" />
       </div>
@@ -56,22 +53,12 @@
       <div>
         <label for="cover">Cover</label>
         <br />
-        <span
-          >(Optional) Upload a book cover for your story. We recommend an aspect
-          ratio of 9:13.</span
-        >
+        <span>(Optional) Upload a book cover for your story. We recommend an aspect ratio of 9:13.</span>
         <br />
         <input type="file" accept="image/*" name="cover" id="cover" />
       </div>
       <br />
-      <button
-        formaction="/api/story/new"
-        formmethod="POST"
-        formenctype="multipart/form-data"
-        data-submit
-      >
-        Submit! Resistance is futile!
-      </button>
+      <button formaction="/api/story/new" formmethod="POST" formenctype="multipart/form-data" data-submit>Submit! Resistance is futile!</button>
     </form>
   </body>
 </html>
