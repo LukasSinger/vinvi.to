@@ -59,22 +59,18 @@ app.post("/api/user/new", (req, res) => {
 
 // Serve story page
 app.get("/story/:id(\\d+)", (req, res) => {
-  let dbEntry = getDb().stories[req.params.id];
-  if (dbEntry) servePage("/story", res);
-  else servePage("/404", res);
-});
-
-// Handle story content request
-app.get("/api/story/:id", (req, res) => {
   let db = getDb();
   let dbEntry = db.stories[req.params.id];
   if (dbEntry) {
     let reqUser = req.headers["x-user"];
     let reqPass = req.headers["x-pass"];
-    if (reqUser == dbEntry.username && isValidCredentials(db, reqUser, reqPass))
-      writeToRes(res, 200, "application/json", dbEntry);
-    else writeToRes(res, 403, "text/html", "Locked to content creator");
-  } else writeToRes(res, 404, "text/html", "404");
+    if (
+      !(reqUser == dbEntry.username && isValidCredentials(db, reqUser, reqPass))
+    ) {
+      delete dbEntry.content;
+    }
+    servePage("/story", res, { story: dbEntry });
+  } else servePage("/404", res);
 });
 
 // Handle new story request
