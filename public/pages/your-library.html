@@ -2,37 +2,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link
-    rel="icon"
-    href="https://cdn.discordapp.com/emojis/955465895793283073.webp?size=128&amp;quality=lossless"
-  />
+  <link rel="icon" href="https://cdn.discordapp.com/emojis/955465895793283073.webp?size=128&amp;quality=lossless" />
   <style></style>
   <!-- Primary Meta Tags -->
   <title>vinvi.to | Your Place</title>
   <meta name="title" content="vinvi.to | Your Place" />
-  <meta
-    name="description"
-    content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. "
-  />
+  <meta name="description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="http://www.vinvi.to/" />
   <meta property="og:title" content="vinvi.to | Your Place" />
-  <meta
-    property="og:description"
-    content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. "
-  />
+  <meta property="og:description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
   <meta property="og:image" content="" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="http://www.vinvi.to/" />
   <meta property="twitter:title" content="vinvi.to | Your Place" />
-  <meta
-    property="twitter:description"
-    content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. "
-  />
+  <meta property="twitter:description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
   <meta property="twitter:image" content="" />
 
   <meta name="theme-color" content="#2469df" />
@@ -41,136 +29,135 @@
   <link rel="stylesheet" href="../dist/output.css" />
 </head>
 <body>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet" />
-    
-    <div class="selection:bg-accent selection:text-black">
-      <div class="min-h-screen w-screen sm:flex">
-        <div class="fixed top-0 z-40 h-screen w-52 shrink-0 border-r border-gray-700 bg-black p-5 py-5 sm:static">
-          <div class="relative h-full">
-            <h1 class="pr-10 font-titles text-xl font-bold tracking-widest text-white">Vinvi.to&nbsp;&nbsp;&nbsp;&nbsp;</h1>
-            <div class="mt-2 flex items-center gap-3 text-slate-400 md:hidden">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet" />
+
+  <div class="selection:bg-accent selection:text-black">
+    <div class="min-h-screen w-screen sm:flex">
+      <div class="fixed top-0 z-40 h-screen w-52 shrink-0 border-r border-gray-700 bg-black p-5 py-5 sm:static">
+        <div class="relative h-full">
+          <h1 class="pr-10 font-titles text-xl font-bold tracking-widest text-white">Vinvi.to&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+          <div class="mt-2 flex items-center gap-3 text-slate-400 md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <h1>1</h1>
+          </div>
+          <div class="space-y-2 pt-4">
+            <a href="/home" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
-              <h1>1</h1>
-            </div>
-            <div class="space-y-2 pt-4">
-              <a href="/home" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
+              Home
+            </a>
+
+            <div id="loggedIn" class="space-y-2 pt-5">
+              <a href="/profile" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                 </svg>
-                Home
+                Profile
               </a>
-    
-              <div id="loggedIn" class="space-y-2 pt-5">
-                <a href="/profile" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                  </svg>
-                  Profile
-                </a>
-                <a href="/library" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                  </svg>
-                  Your Library
-                </a>
-                <a href="/library#created-by-me" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
-                  Your Content
-                </a>
-                <a href="/new" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
-                  </svg>
-                  Create Content
-                </a>
-              </div>
+              <a href="/library" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                Your Library
+              </a>
+              <a href="/library#created-by-me" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                Your Content
+              </a>
+              <a href="/new" class="flex items-center gap-3 text-gray-400 duration-300 hover:gap-5 hover:text-accent">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z" />
+                </svg>
+                Create Content
+              </a>
             </div>
-            <div class="absolute bottom-0 w-full">
-              <div class="mb-5 flex hidden w-full flex-col gap-3 truncate bg-accent p-2 duration-300">
-                <a>Something Else</a>
-                <a class="">Something</a>
-                <a>Logout</a>
-              </div>
-              <button class="w-full truncate bg-accent p-2 duration-300 hover:drop-shadow-[7px_7px_0_#334155]">Username</button>
+          </div>
+          <div class="absolute bottom-0 w-full">
+            <div class="mb-5 flex hidden w-full flex-col gap-3 truncate bg-accent p-2 duration-300">
+              <a>Something Else</a>
+              <a class="">Something</a>
+              <a>Logout</a>
             </div>
+            <button class="w-full truncate bg-accent p-2 duration-300 hover:drop-shadow-[7px_7px_0_#334155]">Username</button>
           </div>
         </div>
-        <div class="max-h-screen min-h-screen w-full overflow-hidden overflow-y-auto bg-black">
-          <div class="sticky top-0 z-20 flex items-center justify-between border-b border-gray-700 bg-[#080808] px-5 py-5 shadow-md">
-            <div class="relative w-48 sm:w-1/2 lg:w-1/3">
-              <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Search" />
-              <svg xmlns="http://www.w3.org/2000/svg" class="absolute top-3 right-3 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <div class="hidden items-center gap-3 text-slate-400 sm:flex">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-              <h1>1</h1>
-            </div>
-            <button class="rounded-md bg-accent p-2 duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#334155] sm:hidden">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+      </div>
+      <div class="max-h-screen min-h-screen w-full overflow-hidden overflow-y-auto bg-black">
+        <div class="sticky top-0 z-20 flex items-center justify-between border-b border-gray-700 bg-[#080808] px-5 py-5 shadow-md">
+          <div class="relative w-48 sm:w-1/2 lg:w-1/3">
+            <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Search" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute top-3 right-3 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
-    
-          <!-- section one -->
-          <div class="p-5 py-10">
-            <div class="relative mb-3 flex w-fit">
-              <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Your Library</h1>
-              <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
-            </div>
-            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 pb-5">
-              <div class="group cursor-pointer p-5">
-                <div class="aspect-169 w-full rounded-sm bg-blue-200 bg-[url(https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80)] bg-cover duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#84cc16] group-hover:drop-shadow-[7px_7px_0_#84cc16]"></div>
-                <h1 class="truncate pt-2 font-semibold text-white">Title Something Goes Here</h1>
-                <p class="text-sm text-gray-400 line-clamp-3">Description about the site can go here in this long description.</p>
-              </div>
-            </div>
+          <div class="hidden items-center gap-3 text-slate-400 sm:flex">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <h1>1</h1>
           </div>
+          <button class="rounded-md bg-accent p-2 duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#334155] sm:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
-    
-        <!-- login -->
-        <div class="fixed top-0 left-0 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60">
-          <div class="fixed flex h-min flex-col items-center space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
-            <div class="relative mb-3 flex w-fit select-none">
-              <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Login</h1>
-              <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
-            </div>
-            <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Username" />
-            <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Password" />
-            <div class="flex w-full gap-5">
-              <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Signup</button>
-              <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Login</button>
-            </div>
+
+        <!-- section one -->
+        <div class="p-5 py-10">
+          <div class="relative mb-3 flex w-fit">
+            <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Your Library</h1>
+            <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
           </div>
-        </div>
-        <!-- signup -->
-        <div class="fixed top-0 left-0 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60">
-          <div class="fixed flex h-min flex-col items-center space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
-            <div class="relative mb-3 flex w-fit select-none">
-              <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Signup</h1>
-              <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
-            </div>
-            <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Username" />
-            <input type="password" minlength="10" class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Password" />
-            <input type="password" minlength="10" class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Repeat Password" />
-            <div class="flex w-full gap-5">
-              <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Signup</button>
-              <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Login</button>
+          <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 pb-5">
+            <div class="group cursor-pointer p-5">
+              <div class="aspect-169 w-full rounded-sm bg-blue-200 bg-[url(https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80)] bg-cover duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#84cc16] group-hover:drop-shadow-[7px_7px_0_#84cc16]"></div>
+              <h1 class="truncate pt-2 font-semibold text-white">Title Something Goes Here</h1>
+              <p class="text-sm text-gray-400 line-clamp-3">Description about the site can go here in this long description.</p>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- login -->
+      <div class="fixed top-0 left-0 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60">
+        <div class="fixed flex h-min flex-col items-center space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
+          <div class="relative mb-3 flex w-fit select-none">
+            <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Login</h1>
+            <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
+          </div>
+          <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Username" />
+          <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Password" />
+          <div class="flex w-full gap-5">
+            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Signup</button>
+            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Login</button>
+          </div>
+        </div>
+      </div>
+      <!-- signup -->
+      <div class="fixed top-0 left-0 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60">
+        <div class="fixed flex h-min flex-col items-center space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
+          <div class="relative mb-3 flex w-fit select-none">
+            <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Signup</h1>
+            <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
+          </div>
+          <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Username" />
+          <input type="password" minlength="10" class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Password" />
+          <input type="password" minlength="10" class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Repeat Password" />
+          <div class="flex w-full gap-5">
+            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Signup</button>
+            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Login</button>
+          </div>
+        </div>
+      </div>
     </div>
-    
+  </div>
 </body>
