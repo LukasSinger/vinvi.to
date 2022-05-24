@@ -52,66 +52,58 @@ app
     else throw err;
   });
 
+// Handle user balance request
+app.get("/api/balance", (req, res) => {
+  let db = getDb();
+  let reqUser = db.users[getReqUser(req)];
+  if (requestHasValidCredentials(req, db)) {
+    writeToRes(res, 200, "application/json", reqUser.balance);
+  } else {
+    writeToRes(res, 401, "text/html", "Invalid credentials");
+  }
+});
+
+// Handle library request
+app.get("/api/library", (req, res) => {
+  let db = getDb();
+  let user = db.users[getReqUser(req)];
+  if (requestHasValidCredentials(req, db)) {
+    writeToRes(res, 200, "application/json", user.ownedStories);
+  } else {
+    writeToRes(res, 401, "text/html", "Invalid credentials");
+  }
+});
+
 // Handle new user request
 app.post("/api/user/new", (req, res) => {
   let db = getDb();
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields) => {
-    if (err) throw err;
+    if (err || !fields.email || !fields.username || !fields.password) {
+      writeToRes(res, 400, "text/html", "Bad request");
+      return;
+    }
     // Store the new user's data
     fields.balance = NEW_USER_BALANCE;
     fields.createdStories = [];
     fields.ownedStories = [];
     db.users[fields.username] = fields;
     saveDb(db);
+    writeToRes(res, 200, "text/html", "Account successfully registered");
   });
-
-  servePage("/home", res);
 });
 
-// Handle user balance request
-app.get("/api/user/:id/balance", (req, res) => {
+// Handle user info request
+app.get("/api/user/:id", (req, res) => {
   let db = getDb();
-  let dbEntry = db.users[req.params.id];
-  if (dbEntry) {
-    if (dbEntry.username == getReqUser(req) && requestHasValidCredentials(req, db)) {
-      writeToRes(res, 200, "application/json", dbEntry.balance);
-    } else {
-      writeToRes(res, 403, "text/html", "Invalid credentials");
-    }
-  } else writeToRes(res, 404, "text/html", "404");
-});
-
-// Handle buy story request
-app.get("/api/story/:id/buy", (req, res) => {
-  let db = getDb();
-  let dbEntry = db.stories[req.params.id];
-  let reqUser = db.users[getReqUser(req)];
-  if (dbEntry) {
-    if (requestHasValidCredentials(req, db)) {
-      if (executeTranscation(reqUser, dbEntry.cost, dbEntry.id)) {
-        saveDb(db);
-        writeToRes(res, 200, "text/html", "Transcation successful");
-      } else {
-        writeToRes(res, 400, "text/html", "Transcation failed (balance too low)");
-      }
-    } else {
-      writeToRes(res, 401, "text/html", "Invalid credentials");
-    }
-  } else writeToRes(res, 404, "text/html", "404");
-});
-
-// Handle story content request
-app.get("/api/story/:id", (req, res) => {
-  let db = getDb();
-  let dbEntry = db.stories[req.params.id];
-  if (dbEntry) {
-    if (userHasAccess(db.users[getReqUser()], dbEntry) && requestHasValidCredentials(req, db)) {
-      writeToRes(res, 200, "application/json", dbEntry);
-    } else {
-      writeToRes(res, 403, "text/html", "Locked to content creator");
-    }
-  } else writeToRes(res, 404, "text/html", "404");
+  let user = db.users[req.params.id];
+  if (user) {
+    delete user.email;
+    delete user.password;
+    writeToRes(res, 200, "application/json", user);
+  } else {
+    writeToRes(res, 404, "text/html", "User not found");
+  }
 });
 
 // Handle new story request
@@ -120,6 +112,10 @@ app.post("/api/story/new", (req, res) => {
   let id = getUniqueId();
   let form = new formidable.IncomingForm();
   form.parse(req, (err, fields, files) => {
+    if (err || !fields.username || !fields.password || !fields.title || !fields.content) {
+      writeToRes(res, 400, "text/html", "Bad request");
+      return;
+    }
     // Check for valid authentication
     if (isValidCredentials(fields.username, fields.password, db)) {
       // Don't include password in database entry
@@ -150,10 +146,77 @@ app.post("/api/story/new", (req, res) => {
   });
 });
 
-// Handle daily reward request
+// Handle story content request
+app.get("/api/story/:id", (req, res) => {
+  let db = getDb();
+  let dbEntry = db.stories[req.params.id];
+  if (dbEntry) {
+    if (userHasAccess(db.users[getReqUser()], dbEntry) && requestHasValidCredentials(req, db)) {
+      writeToRes(res, 200, "application/json", dbEntry);
+    } else {
+      delete dbEntry.content;
+      writeToRes(res, 200, "application/json", dbEntry);
+    }
+  } else writeToRes(res, 404, "text/html", "Story not found");
+});
+
+// Handle buy story request
+app.get("/api/story/:id/buy", (req, res) => {
+  let db = getDb();
+  let dbEntry = db.stories[req.params.id];
+  let reqUser = db.users[getReqUser(req)];
+  if (dbEntry) {
+    if (requestHasValidCredentials(req, db)) {
+      if (executeTranscation(reqUser, dbEntry.cost, dbEntry.id)) {
+        saveDb(db);
+        writeToRes(res, 200, "text/html", "Transcation successful");
+      } else {
+        writeToRes(res, 400, "text/html", "Transcation failed (balance too low)");
+      }
+    } else {
+      writeToRes(res, 401, "text/html", "Invalid credentials");
+    }
+  } else writeToRes(res, 404, "text/html", "Story not found");
+});
+
+// Handle daily rewards request
 app.get("/api/rewards", (req, res) => {
-  checkDailyReward(req);
-  writeToRes(res, 200, "text/html", "Request received");
+  const ONE_DAY = 1000 * 60 * 60 * 24;
+  let db = getDb();
+  let user = db.users[getReqUser(req)];
+  if (requestHasValidCredentials(req, db)) {
+    // Check if the user has received daily rewards within the last 24 hours
+    let timeSinceLastHandout = Date.UTC() - user.lastDailyReward;
+    if (!user.lastDailyReward || timeSinceLastHandout > ONE_DAY) {
+      user.lastDailyReward = Date.UTC();
+      let allStoryIds = Object.keys(db.stories);
+      let selectedStoryIds = [];
+      // Give the user rewards until the max is reached or there are no more stories to give
+      for (let i = 0; i < MAX_DAILY_REWARDS; i++) {
+        let selection = Math.floor(Math.random() * allStoryIds.length);
+        let originalSelection = selection;
+        let selectedId = allStoryIds[selection];
+        // If the selected story has already been selected or the user already has it,
+        // look sequentially for a valid story
+        while (selectedStoryIds.includes(selectedId) || userHasAccess(user, db.stories[selectedId])) {
+          selection = (selection + 1) % allStoryIds.length;
+          selectedId = allStoryIds[selection];
+          // If the sequential search couldn't find a valid story, save and stop
+          if (selection == originalSelection) {
+            saveDb(db);
+            writeToRes(res, 200, "text/html", "Daily rewards partially fulfilled");
+            return;
+          }
+        }
+        selectedStoryIds.push(selectedId);
+        executeTranscation(user, 0, selectedId);
+      }
+      saveDb(db);
+      writeToRes(res, 200, "text/html", "Daily rewards fulfilled");
+    } else {
+      writeToRes(res, 429, "text/html", ONE_DAY - timeSinceLastHandout);
+    }
+  } else writeToRes(res, 401, "text/html", "Invalid credentials");
 });
 
 // Serve story page
@@ -200,37 +263,6 @@ function writeToRes(res, status, type, data) {
   res.writeHead(status, { "Content-Type": type });
   res.write(data);
   res.end();
-}
-
-function checkDailyReward(req) {
-  let db = getDb();
-  let user = db.users[getReqUser(req)];
-  // Check if the user has received a daily reward within the last 24 hours
-  if (!user.lastDailyReward || Date.UTC() - user.lastDailyReward > 1000 * 60 * 60 * 24) {
-    user.lastDailyReward = Date.UTC();
-    let allStoryIds = Object.keys(db.stories);
-    let selectedStoryIds = [];
-    // Give the user rewards until the max is reached or there are no more stories to give
-    for (let i = 0; i < MAX_DAILY_REWARDS; i++) {
-      let selection = Math.floor(Math.random() * allStoryIds.length);
-      let originalSelection = selection;
-      let selectedId = allStoryIds[selection];
-      // If the selected story has already been selected or the user already has it,
-      // look sequentially for a valid story
-      while (selectedStoryIds.includes(selectedId) || userHasAccess(user, db.stories[selectedId])) {
-        selection = (selection + 1) % allStoryIds.length;
-        selectedId = allStoryIds[selection];
-        // If the sequential search couldn't find a valid story, save and stop
-        if (selection == originalSelection) {
-          saveDb(db);
-          return;
-        }
-      }
-      selectedStoryIds.push(selectedId);
-      executeTranscation(user, 0, selectedId);
-    }
-    saveDb(db);
-  }
 }
 
 /**
