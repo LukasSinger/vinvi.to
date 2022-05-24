@@ -16,6 +16,7 @@ const staticPathMappings = {
 };
 
 const NEW_USER_BALANCE = 10;
+const MAX_DAILY_REWARDS = 1;
 const NEW_STORY_REWARD = 5;
 const MIN_STORY_COST = 1;
 const COST_PER_WORD = 0.01;
@@ -62,9 +63,7 @@ app.post("/api/user/new", (req, res) => {
     fields.createdStories = [];
     fields.ownedStories = [];
     db.users[fields.username] = fields;
-    fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
-      if (err) throw err;
-    });
+    saveDb(db);
   });
 
   servePage("/home", res);
@@ -75,17 +74,11 @@ app.get("/api/user/:id/balance", (req, res) => {
   let db = getDb();
   let dbEntry = db.users[req.params.id];
   if (dbEntry) {
-    authenticateRequest(
-      dbEntry.username,
-      req,
-      db,
-      () => {
-        writeToRes(res, 200, "application/json", dbEntry.balance);
-      },
-      () => {
-        writeToRes(res, 403, "text/html", "Invalid credentials");
-      }
-    );
+    if (dbEntry.username == getReqUser(req) && requestHasValidCredentials(req, db)) {
+      writeToRes(res, 200, "application/json", dbEntry.balance);
+    } else {
+      writeToRes(res, 403, "text/html", "Invalid credentials");
+    }
   } else writeToRes(res, 404, "text/html", "404");
 });
 
@@ -97,6 +90,7 @@ app.get("/api/story/:id/buy", (req, res) => {
   if (dbEntry) {
     if (requestHasValidCredentials(req, db)) {
       if (executeTranscation(reqUser, dbEntry.cost, dbEntry.id)) {
+        saveDb(db);
         writeToRes(res, 200, "text/html", "Transcation successful");
       } else {
         writeToRes(res, 400, "text/html", "Transcation failed (balance too low)");
@@ -107,29 +101,16 @@ app.get("/api/story/:id/buy", (req, res) => {
   } else writeToRes(res, 404, "text/html", "404");
 });
 
-// Serve story page
-app.get("/story/:id(\\d+)", (req, res) => {
-  let dbEntry = getDb().stories[req.params.id];
-  if (dbEntry) servePage("/story", res);
-  else servePage("/404", res);
-});
-
 // Handle story content request
 app.get("/api/story/:id", (req, res) => {
   let db = getDb();
   let dbEntry = db.stories[req.params.id];
   if (dbEntry) {
-    authenticateRequest(
-      dbEntry.username,
-      req,
-      db,
-      () => {
-        writeToRes(res, 200, "application/json", dbEntry);
-      },
-      () => {
-        writeToRes(res, 403, "text/html", "Locked to content creator");
-      }
-    );
+    if (userHasAccess(db.users[getReqUser()], dbEntry) && requestHasValidCredentials(req, db)) {
+      writeToRes(res, 200, "application/json", dbEntry);
+    } else {
+      writeToRes(res, 403, "text/html", "Locked to content creator");
+    }
   } else writeToRes(res, 404, "text/html", "404");
 });
 
@@ -161,14 +142,25 @@ app.post("/api/story/new", (req, res) => {
       // Add balance to user's account
       db.users[fields.username].balance += NEW_STORY_REWARD;
       // Write to database
-      fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
-        if (err) throw err;
-      });
+      saveDb(db);
       writeToRes(res, 200, "text/html", "Submitted successfully");
     } else {
       writeToRes(res, 401, "text/html", "Invalid credentials");
     }
   });
+});
+
+// Handle daily reward request
+app.get("/api/rewards", (req, res) => {
+  checkDailyReward(req);
+  writeToRes(res, 200, "text/html", "Request received");
+});
+
+// Serve story page
+app.get("/story/:id(\\d+)", (req, res) => {
+  let dbEntry = getDb().stories[req.params.id];
+  if (dbEntry) servePage("/story", res);
+  else servePage("/404", res);
 });
 
 // Serve static pages
@@ -210,6 +202,37 @@ function writeToRes(res, status, type, data) {
   res.end();
 }
 
+function checkDailyReward(req) {
+  let db = getDb();
+  let user = db.users[getReqUser(req)];
+  // Check if the user has received a daily reward within the last 24 hours
+  if (!user.lastDailyReward || Date.UTC() - user.lastDailyReward > 1000 * 60 * 60 * 24) {
+    user.lastDailyReward = Date.UTC();
+    let allStoryIds = Object.keys(db.stories);
+    let selectedStoryIds = [];
+    // Give the user rewards until the max is reached or there are no more stories to give
+    for (let i = 0; i < MAX_DAILY_REWARDS; i++) {
+      let selection = Math.floor(Math.random() * allStoryIds.length);
+      let originalSelection = selection;
+      let selectedId = allStoryIds[selection];
+      // If the selected story has already been selected or the user already has it,
+      // look sequentially for a valid story
+      while (selectedStoryIds.includes(selectedId) || userHasAccess(user, db.stories[selectedId])) {
+        selection = (selection + 1) % allStoryIds.length;
+        selectedId = allStoryIds[selection];
+        // If the sequential search couldn't find a valid story, save and stop
+        if (selection == originalSelection) {
+          saveDb(db);
+          return;
+        }
+      }
+      selectedStoryIds.push(selectedId);
+      executeTranscation(user, 0, selectedId);
+    }
+    saveDb(db);
+  }
+}
+
 /**
  * Withdraws from the user's balance and adds the given asset to their account.
  * @param {object} user The user to do the transaction with
@@ -222,19 +245,6 @@ function executeTranscation(user, cost, assetID) {
   user.balance -= cost;
   user.ownedStories.push(assetID);
   return true;
-}
-
-/**
- * Runs callbacks based on whether or not the information provided is successfully authenticated.
- * @param {string} owner The username of the owner of the data that this request is trying to access.
- * @param {http.IncomingRequest} req The request to read authentication details from.
- * @param {object} db The database to authenticate against.
- * @param {function} grant The callback to run if access is granted.
- * @param {function} deny The callback to run if access is denied.
- */
-function authenticateRequest(owner, req, db, grant, deny) {
-  if (reqUser == owner && requestHasValidCredentials(req, db)) grant();
-  else deny();
 }
 
 /**
@@ -256,6 +266,16 @@ function requestHasValidCredentials(req, db) {
  */
 function getReqUser(req) {
   return req.headers["x-user"];
+}
+
+/**
+ * Checks a user's current access to a given story.
+ * @param {object} user The user object.
+ * @param {object} story The story object.
+ * @returns {boolean} Whether or not the story is accessible by the given user.
+ */
+function userHasAccess(user, story) {
+  return user.createdStories.includes(story.id) || user.ownedStories.includes(story.id);
 }
 
 /**
@@ -289,6 +309,16 @@ function getDb() {
     db.users = {};
   } else db = JSON.parse(db);
   return db;
+}
+
+/**
+ * Saves new database contents.
+ * @param {object} db The new database object to write.
+ */
+function saveDb(db) {
+  fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
+    if (err) throw err;
+  });
 }
 
 /**

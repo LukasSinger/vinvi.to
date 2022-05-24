@@ -28,7 +28,7 @@
   <!-- import the webpage's stylesheet -->
   <link rel="stylesheet" href="../dist/output.css" />
 </head>
-<body>
+<body id="body">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet" />
@@ -93,36 +93,10 @@
       </div>
 
       <!-- login -->
-      <div class="fixed top-0 left-0 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60">
-        <div class="fixed flex h-min flex-col items-center space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
-          <div class="relative mb-3 flex w-fit select-none">
-            <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Login</h1>
-            <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
-          </div>
-          <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Username" />
-          <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Password" />
-          <div class="flex w-full gap-5">
-            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Signup</button>
-            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Login</button>
-          </div>
-        </div>
-      </div>
+      <%- include('../partials/login'); %>
       <!-- signup -->
-      <div class="fixed top-0 left-0 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60">
-        <div class="fixed flex h-min flex-col items-center space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
-          <div class="relative mb-3 flex w-fit select-none">
-            <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Signup</h1>
-            <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
-          </div>
-          <input class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Username" />
-          <input type="password" minlength="10" class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Password" />
-          <input type="password" minlength="10" class="bg-opacity- h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Repeat Password" />
-          <div class="flex w-full gap-5">
-            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Signup</button>
-            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Login</button>
-          </div>
-        </div>
-      </div>
+      <%- include('../partials/signup'); %>
     </div>
   </div>
+  <script type="text/javascript" src="../script/navbar.js"></script>
 </body>

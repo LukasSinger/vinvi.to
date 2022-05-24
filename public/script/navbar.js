@@ -30,7 +30,21 @@ function togProfileInfo() {
   console.log("sideba2r");
 }
 
-function togLogin() {
-  let main = document.getElementById("login");
-  main.classList.toggle("hidden");
-}
+const signupButton = document.getElementById("signupButton");
+let signUpOpen = false;
+let signUpModal = document.getElementById("signUpModal");
+let innerSignupModal = document.getElementById("innerSignupModal");
+
+signupButton.addEventListener("click", function () {
+  signUpModal.classList.remove("hidden");
+  console.log("Modal opened");
+  signUpOpen = true;
+});
+
+document.addEventListener("click", function (event) {
+  if (signUpOpen && innerSignupModal !== event.target && !innerSignupModal.contains(event.target)) {
+    console.log("Modal Closed");
+    signUpOpen = false;
+    signUpModal.classList.add("hidden");
+  }
+});
