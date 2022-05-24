@@ -17,6 +17,7 @@ const staticPathMappings = {
 
 const NEW_USER_BALANCE = 10;
 const NEW_STORY_REWARD = 5;
+const MIN_STORY_COST = 1;
 const COST_PER_WORD = 0.01;
 
 const fs = require("fs");
@@ -58,6 +59,8 @@ app.post("/api/user/new", (req, res) => {
     if (err) throw err;
     // Store the new user's data
     fields.balance = NEW_USER_BALANCE;
+    fields.createdStories = [];
+    fields.ownedStories = [];
     db.users[fields.username] = fields;
     fs.writeFile(DB_LOCATION, JSON.stringify(db), (err) => {
       if (err) throw err;
@@ -83,6 +86,24 @@ app.get("/api/user/:id/balance", (req, res) => {
         writeToRes(res, 403, "text/html", "Invalid credentials");
       }
     );
+  } else writeToRes(res, 404, "text/html", "404");
+});
+
+// Handle buy story request
+app.get("/api/story/:id/buy", (req, res) => {
+  let db = getDb();
+  let dbEntry = db.stories[req.params.id];
+  let reqUser = db.users[getReqUser(req)];
+  if (dbEntry) {
+    if (requestHasValidCredentials(req, db)) {
+      if (executeTranscation(reqUser, dbEntry.cost, dbEntry.id)) {
+        writeToRes(res, 200, "text/html", "Transcation successful");
+      } else {
+        writeToRes(res, 400, "text/html", "Transcation failed (balance too low)");
+      }
+    } else {
+      writeToRes(res, 401, "text/html", "Invalid credentials");
+    }
   } else writeToRes(res, 404, "text/html", "404");
 });
 
@@ -132,8 +153,10 @@ app.post("/api/story/new", (req, res) => {
         });
       }
       // Calculate cost
-      fields.cost = fields.content.length;
+      let rawCost = Math.floor(fields.content.countWords() * COST_PER_WORD);
+      fields.cost = Math.max(rawCost, MIN_STORY_COST);
       // Store the metadata and story content
+      fields.id = id;
       db.stories[id] = fields;
       // Add balance to user's account
       db.users[fields.username].balance += NEW_STORY_REWARD;
@@ -188,6 +211,20 @@ function writeToRes(res, status, type, data) {
 }
 
 /**
+ * Withdraws from the user's balance and adds the given asset to their account.
+ * @param {object} user The user to do the transaction with
+ * @param {number} cost The balance to withdraw
+ * @param {string} asset The ID of the asset to give the user access to
+ * @returns {boolean} Whether or not the transaction was successful
+ */
+function executeTranscation(user, cost, assetID) {
+  if (user.balance < cost) return false;
+  user.balance -= cost;
+  user.ownedStories.push(assetID);
+  return true;
+}
+
+/**
  * Runs callbacks based on whether or not the information provided is successfully authenticated.
  * @param {string} owner The username of the owner of the data that this request is trying to access.
  * @param {http.IncomingRequest} req The request to read authentication details from.
@@ -196,10 +233,29 @@ function writeToRes(res, status, type, data) {
  * @param {function} deny The callback to run if access is denied.
  */
 function authenticateRequest(owner, req, db, grant, deny) {
-  let reqUser = req.headers["x-user"];
-  let reqPass = req.headers["x-pass"];
-  if (reqUser == owner && isValidCredentials(reqUser, reqPass, db)) grant();
+  if (reqUser == owner && requestHasValidCredentials(req, db)) grant();
   else deny();
+}
+
+/**
+ * Evaluates the given request for a valid username and password combination.
+ * @param {http.IncomingRequest} req The request to read authentication details from.
+ * @param {object} db The database to authenticate against.
+ * @returns {boolean} Whether or not the request can be authenticated.
+ */
+function requestHasValidCredentials(req, db) {
+  let reqUser = getReqUser(req);
+  let reqPass = req.headers["x-pass"];
+  return isValidCredentials(reqUser, reqPass, db);
+}
+
+/**
+ * Gets the username from the authentication details of the request.
+ * @param {http.IncomingRequest} req The request to read the username from.
+ * @returns {string} The username.
+ */
+function getReqUser(req) {
+  return req.headers["x-user"];
 }
 
 /**
