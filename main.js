@@ -77,11 +77,28 @@ app.get("/api/library", (req, res) => {
 // Handle new user request
 app.post("/api/user/new", (req, res) => {
   let db = getDb();
-  let form = new formidable.IncomingForm();
-  form.parse(req, (err, fields) => {
+  let id = getUniqueId();
+  let form = new formidable.IncomingForm({
+    filter: ({ name, originalFilename, mimetype }) => {
+      return mimetype && mimetype.includes("image");
+    },
+    maxFileSize: 8 * 1024 * 1024 /* 8MB */,
+    filename: () => id,
+    keepExtensions: true
+  });
+  form.parse(req, (err, fields, files) => {
     if (err || !fields.email || !fields.username || !fields.password) {
       writeToRes(res, 400, "text/html", "Bad request");
       return;
+    }
+    // Store the profile picture, if there is one
+    let pfpImg = files["pfp"];
+    if (pfpImg.originalFilename) {
+      let newPfpPath = `/${PUBLIC_DB_DIR_NAME}/img/${pfpImg.originalFilename}`;
+      fields.pfp = newPfpPath;
+      fs.rename(pfpImg.filepath, PUBLIC_DIR + newPfpPath, (err) => {
+        if (err) throw err;
+      });
     }
     // Store the new user's data
     fields.balance = NEW_USER_BALANCE;
@@ -110,7 +127,14 @@ app.get("/api/user/:id", (req, res) => {
 app.post("/api/story/new", (req, res) => {
   let db = getDb();
   let id = getUniqueId();
-  let form = new formidable.IncomingForm();
+  let form = new formidable.IncomingForm({
+    filter: ({ name, originalFilename, mimetype }) => {
+      return mimetype && mimetype.includes("image");
+    },
+    maxFileSize: 8 * 1024 * 1024 /* 8MB */,
+    filename: () => id,
+    keepExtensions: true
+  });
   form.parse(req, (err, fields, files) => {
     if (err || !fields.username || !fields.password || !fields.title || !fields.content) {
       writeToRes(res, 400, "text/html", "Bad request");
@@ -144,6 +168,19 @@ app.post("/api/story/new", (req, res) => {
       writeToRes(res, 401, "text/html", "Invalid credentials");
     }
   });
+});
+
+// Handle story feed request
+app.get("/api/story/recent/:limit", (req, res) => {
+  let db = getDb();
+  let storyIds = Object.keys(db.stories);
+  let feed = [];
+  for (let i = 0; i < req.params.limit; i++) {
+    let story = db.stories[storyIds[i]];
+    delete story.content;
+    feed.push(story);
+  }
+  writeToRes(res, 200, "application/json", feed);
 });
 
 // Handle story content request
