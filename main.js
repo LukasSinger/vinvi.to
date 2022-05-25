@@ -170,15 +170,22 @@ app.post("/api/story/new", (req, res) => {
   });
 });
 
-// Handle story feed request
-app.get("/api/story/recent/:limit", (req, res) => {
+// Handle story search request
+app.get("/api/story/search", (req, res) => {
   let db = getDb();
-  let storyIds = Object.keys(db.stories);
+  let ids = Object.keys(db.stories);
   let feed = [];
-  for (let i = 0; i < req.params.limit; i++) {
-    let story = db.stories[storyIds[i]];
-    delete story.content;
-    feed.push(story);
+  let query = req.query.query;
+  let limit = req.query.limit;
+  if (!limit) limit = 20;
+  for (let i = 0; i < limit && i < ids.length; i++) {
+    let story = db.stories[ids[ids.length - 1 - i]];
+    // Add the story metadata to the results if there was no query
+    // or the title matches the query
+    if (!query || story.title.includes(query)) {
+      delete story.content;
+      feed.push(story);
+    }
   }
   writeToRes(res, 200, "application/json", feed);
 });
