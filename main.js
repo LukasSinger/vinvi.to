@@ -93,7 +93,7 @@ app.post("/api/user/new", (req, res) => {
     }
     // Store the profile picture, if there is one
     let pfpImg = files["pfp"];
-    if (pfpImg.originalFilename) {
+    if (pfpImg) {
       let newPfpPath = `/${PUBLIC_DB_DIR_NAME}/img/${pfpImg.originalFilename}`;
       fields.pfp = newPfpPath;
       fs.rename(pfpImg.filepath, PUBLIC_DIR + newPfpPath, (err) => {
@@ -106,7 +106,7 @@ app.post("/api/user/new", (req, res) => {
     fields.ownedStories = [];
     db.users[fields.username] = fields;
     saveDb(db);
-    writeToRes(res, 200, "text/html", "Account successfully registered");
+    writeToRes(res, 204);
   });
 });
 
@@ -304,8 +304,9 @@ function writeToRes(res, status, type, data) {
   if (typeof data != "string" && !(data instanceof Buffer)) {
     data = JSON.stringify(data);
   }
-  res.writeHead(status, { "Content-Type": type });
-  res.write(data);
+  if (type) res.writeHead(status, { "Content-Type": type });
+  else res.writeHead(status);
+  if (data) res.write(data);
   res.end();
 }
 

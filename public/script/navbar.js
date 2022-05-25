@@ -41,7 +41,7 @@ signupButton.addEventListener("click", function () {
   signUpOpen = true;
 });
 
-document.addEventListener("click", function (event) {
+document.addEventListener("mouseup", function (event) {
   if (signUpOpen && innerSignupModal !== event.target && !innerSignupModal.contains(event.target)) {
     console.log("Modal Closed");
     signUpOpen = false;

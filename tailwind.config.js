@@ -1,23 +1,19 @@
-const plugin = require('tailwindcss/plugin')
+const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-    content: [
-      'public/pages/**/*.{html,js}',
-    ],
+  content: ["public/pages/**/*.{html,js}", "public/partials/signup.ejs"],
   theme: {
     extend: {
       colors: {
-        accent: 'rgb(132 204 22)',
+        accent: "rgb(132 204 22)"
       },
       aspectRatio: {
-        169: '9 / 13',
+        169: "9 / 13"
       },
       fontFamily: {
-        titles: ['Righteous', 'cursive'],
-      },
-    },
+        titles: ["Righteous", "cursive"]
+      }
+    }
   },
-  plugins: [
-    require('@tailwindcss/line-clamp'),
-  ],
-}
+  plugins: [require("@tailwindcss/line-clamp")]
+};
