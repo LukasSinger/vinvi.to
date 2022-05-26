@@ -1,3 +1,11 @@
+if (localStorage.getItem("username")) {
+  // Delete the logged-out sidebar
+  document.getElementById("loggedOutSidebar").remove();
+} else {
+  // Delete the logged-in sidebar
+  document.getElementById("loggedInSidebar").remove();
+}
+
 function togSideBar() {
   let sidebar = document.getElementById("sideBar");
   let profileInfo = document.getElementById("profileInfo");
