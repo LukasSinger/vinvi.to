@@ -9,10 +9,12 @@ const PORT = process.env.NODE_ENV ? 16677 : 16667;
 const staticPathMappings = {
   "/": "pages/home.html",
   "/home": "pages/home.html",
-  "/story": "pages/read-book.html",
-  "/new": "pages/start-writing.html",
   "/library": "pages/your-library.html",
-  "/404": "pages/blank-page.html"
+  "/new": "pages/start-writing.html",
+  "/profile": "pages/profile.html",
+  "/search": "pages/search.html",
+  "/story": "pages/read-book.html",
+  "/404": "pages/404.html"
 };
 
 const NEW_USER_BALANCE = 10;

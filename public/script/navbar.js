@@ -40,16 +40,17 @@ function togProfileInfo() {
 
 const signupButton = document.getElementById("signupButton");
 let signUpOpen = false;
-let signUpModal = document.getElementById("signUpModal");
-let innerSignupModal = document.getElementById("innerSignupModal");
 
 signupButton.addEventListener("click", function () {
+  let signUpModal = document.getElementById("signUpModal");
   signUpModal.classList.remove("hidden");
   console.log("Modal opened");
   signUpOpen = true;
 });
 
 document.addEventListener("mouseup", function (event) {
+  let signUpModal = document.getElementById("signUpModal");
+  let innerSignupModal = document.getElementById("innerSignupModal");
   if (signUpOpen && innerSignupModal !== event.target && !innerSignupModal.contains(event.target)) {
     console.log("Modal Closed");
     signUpOpen = false;
