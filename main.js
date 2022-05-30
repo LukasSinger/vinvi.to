@@ -167,7 +167,7 @@ app.post("/api/story/new", (req, res) => {
       db.users[fields.username].balance += NEW_STORY_REWARD;
       // Write to database
       saveDb(db);
-      writeToRes(res, 200, "text/html", "Submitted successfully");
+      writeToRes(res, 205, "text/html", "Submitted successfully");
     } else {
       writeToRes(res, 401, "text/html", "Invalid credentials");
     }
@@ -342,7 +342,7 @@ function performSearch(req) {
   let query;
   let limit;
   if (req && req.query) {
-    query = req.query.query;
+    query = req.query.query.toLowerCase();
     limit = req.query.limit;
   }
   if (!limit) limit = 20;
@@ -350,7 +350,7 @@ function performSearch(req) {
     let story = db.stories[ids[ids.length - 1 - i]];
     // Add the story metadata to the results if there was no query
     // or the title matches the query
-    if (!query || story.title.includes(query)) {
+    if (!query || story.title.toLowerCase().includes(query)) {
       delete story.content;
       feed.push(story);
     }

@@ -1,7 +1,7 @@
-let formElement = document.querySelector("#searchForm");
-let searchElement = formElement.querySelector("[name='search']");
+let searchFormElement = document.querySelector("#searchForm");
+let searchElement = searchFormElement.querySelector("[name='search']");
 
-formElement.addEventListener("submit", (e) => {
+searchFormElement.addEventListener("submit", (e) => {
   e.preventDefault();
   window.location.assign(`/search?query=${searchElement.value}`);
 });

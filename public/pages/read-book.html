@@ -41,7 +41,7 @@
         <!-- section one -->
         <div class="p-5 py-10">
           <div class="flex items-center gap-5 border-b pb-10">
-            <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-[url(<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= "https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80" %><% } %>)] bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6"></div>
+            <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= 'https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80' %><% } %>')"></div>
             <div>
               <h1 class="truncate pt-2 text-xl font-semibold text-white"><%= metadata.title %></h1>
               <a href="/user/<%= metadata.username %>" class="text-sm text-gray-300 hover:text-accent"><%= metadata.username %></a>

@@ -40,41 +40,43 @@
         <%- include('../partials/topbar') %>
         <!-- section one -->
         <div class="p-5 py-10">
-          <div id="stepOne" class="hidden">
-            <div class="relative mb-3 flex w-fit select-none">
-              <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Create New Story</h1>
-              <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
+          <form id="storyForm">
+            <!-- username + password -->
+            <input class="hidden" name="username" />
+            <input class="hidden" name="password" />
+            <!-- content -->
+            <div>
+              <div class="relative mb-8 flex w-fit select-none">
+                <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Start Writing</h1>
+                <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
+              </div>
+              <div class="flex bg-accent text-center text-white">
+                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H1</button>
+                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H2</button>
+                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">P</button>
+                <div class="h-full w-5 bg-white"></div>
+                <button class="w-full bg-gray-900 p-3 font-bold duration-500 hover:-translate-y-2">B</button>
+                <button class="w-full bg-gray-900 p-3 italic duration-500 hover:-translate-y-2">I</button>
+                <button class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
+                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2"><></button>
+                <button class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
+              </div>
+              <textarea minlength="10" class="peer h-24 w-full resize-none rounded-sm bg-[#1c1c1c] py-2 px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" name="content" placeholder="Content" required></textarea>
             </div>
-            <input class="my-5 h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Story Title" />
-            <div class="relative">
-              <textarea minlength="10" class="peer h-24 w-full resize-none rounded-sm bg-[#1c1c1c] py-2 px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Story Description"></textarea>
-              <h1 class="absolute bottom-5 right-5 hidden rounded-md bg-accent px-2 py-1 duration-300 peer-focus:block">100</h1>
+            <!-- metadata -->
+            <div>
+              <input class="my-5 h-10 w-full rounded-sm bg-[#1c1c1c] px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" name="title" placeholder="Title" required />
+              <div class="relative">
+                <textarea minlength="10" class="peer h-24 w-full resize-none rounded-sm bg-[#1c1c1c] py-2 px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" name="description" placeholder="Description"></textarea>
+                <h1 class="absolute bottom-5 right-5 hidden rounded-md bg-accent px-2 py-1 duration-300 peer-focus:block">100</h1>
+              </div>
+              <!-- the other choose file design is here https://play.tailwindcss.com/7oEALLPll4 -->
+              <input type="file" accept="image/*" class="py-3 text-slate-400 file:mr-4 file:h-10 file:select-none file:rounded-sm file:bg-[#1c1c1c] file:px-4 file:text-slate-400 file:outline-none file:duration-300 file:hover:drop-shadow-[7px_7px_0_#84cc16]" name="cover" />
             </div>
-            <!-- the other choose file design is here https://play.tailwindcss.com/7oEALLPll4 -->
-            <input type="file" class="py-3 text-slate-400 file:mr-4 file:h-10 file:select-none file:rounded-sm file:bg-[#1c1c1c] file:px-4 file:text-slate-400 file:outline-none file:duration-300 file:hover:drop-shadow-[7px_7px_0_#84cc16]" />
-          </div>
-          <div id="stepTwo">
-            <div class="relative mb-8 flex w-fit select-none">
-              <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Start Writing</h1>
-              <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
+            <div class="flex w-full gap-5 pt-5">
+              <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]" formaction="/api/story/new" formmethod="POST" formenctype="multipart/form-data">Submit</button>
             </div>
-            <div class="flex bg-accent text-center text-white">
-              <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H1</button>
-              <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H2</button>
-              <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">P</button>
-              <div class="h-full w-5 bg-white"></div>
-              <button class="w-full bg-gray-900 p-3 font-bold duration-500 hover:-translate-y-2">B</button>
-              <button class="w-full bg-gray-900 p-3 italic duration-500 hover:-translate-y-2">I</button>
-              <button class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
-              <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2"><></button>
-              <button class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
-            </div>
-            <textarea minlength="10" class="peer h-24 w-full resize-none rounded-sm bg-[#1c1c1c] py-2 px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" placeholder="Story Description"></textarea>
-          </div>
-          <div class="flex w-full gap-5 pt-5">
-            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Cancel</button>
-            <button class="bg-opacity- h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Next</button>
-          </div>
+          </form>
         </div>
       </div>
 
@@ -111,4 +113,5 @@
       </div>
     </div>
   </div>
+  <script src="../script/story.js"></script>
 </body>

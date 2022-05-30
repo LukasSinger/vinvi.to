@@ -42,7 +42,7 @@
         <div class="p-5 py-10">
           <div class="flex w-full justify-between gap-5 border-b pb-10 sm:items-center">
             <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
-              <div class="h-36 w-36 rounded-md bg-blue-200 bg-[url(<% if (metadata.pfp) { %><%= metadata.pfp %><% } else { %><%= "https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80" %><% } %>)] bg-cover drop-shadow-[7px_7px_0_#84cc16]"></div>
+              <div class="h-36 w-36 rounded-md bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16]" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= 'https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80' %><% } %>')"></div>
               <div>
                 <h1 class="truncate pt-2 text-xl font-semibold text-white"><%= metadata.username %></h1>
                 <!-- bio -->
@@ -55,7 +55,7 @@
             <button class="hidden float-right mt-44 h-min bg-accent p-2 duration-300 hover:drop-shadow-[7px_7px_0_#334155] sm:mt-0">Follow</button>
           </div>
 
-          <div class="grid w-full grid-cols-3 gap-5 overflow-hidden pt-8 md:grid-cols-5 lg:grid-cols-7 2xl:grid-cols-10">
+          <div class="flex snap-x overflow-x-scroll pb-5">
             <% if (metadata.createdStories.length > 0) { %> <% for (let i = 0; i < metadata.createdStories.length; i++) { %> <%- include("../partials/storyTile.ejs", { metadata: metadata.createdStories[i] }) %> <% } %> <% } else { %>
             <p class="text-slate-400">This user hasn't created any stories yet.</p>
             <% } %>
