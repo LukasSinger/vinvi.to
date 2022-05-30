@@ -1,5 +1,7 @@
-<div class="group w-44 cursor-pointer snap-start p-5">
-  <div class="aspect-169 w-full rounded-sm bg-blue-200 bg-[url(https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80)] bg-cover duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#84cc16] group-hover:drop-shadow-[7px_7px_0_#84cc16]"></div>
-  <h1 class="truncate pt-2 font-semibold text-white">Title Something Goes Here</h1>
-  <p class="text-sm text-gray-400 line-clamp-3">Description about the site can go here in this long description.</p>
+<div class="group w-44 cursor-pointer snap-start p-5" >
+  <a href="/story/<%= metadata.id %>">
+    <div class="aspect-169 w-full rounded-sm bg-blue-200 bg-[url(<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= "https://images.unsplash.com/photo-1507692812060-98338d07aca3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80" %><% } %>)] bg-cover duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#84cc16] group-hover:drop-shadow-[7px_7px_0_#84cc16]"></div>
+    <h1 class="truncate pt-2 font-semibold text-white"><%= metadata.title %></h1>
+    <p class="text-sm text-gray-400 line-clamp-3"><%= metadata.description %></p>
+  </a>
 </div>

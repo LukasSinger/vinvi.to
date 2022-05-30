@@ -6,7 +6,7 @@ const DB_LOCATION = DB_DIR + "/database.json";
 const HOST = process.env.NODE_ENV ? "saturn.rochesterschools.org" : "localhost";
 const PORT = process.env.NODE_ENV ? 16677 : 16667;
 
-const staticPathMappings = {
+const pathMappings = {
   "/": "pages/home.html",
   "/home": "pages/home.html",
   "/library": "pages/your-library.html",
@@ -89,7 +89,7 @@ app.post("/api/user/new", (req, res) => {
     keepExtensions: true
   });
   form.parse(req, (err, fields, files) => {
-    if (err || !fields.email || !fields.username || !fields.password) {
+    if (err || db.users[fields.username] || !fields.email || !fields.username || !fields.password) {
       writeToRes(res, 400, "text/html", "Bad request");
       return;
     }
@@ -148,7 +148,7 @@ app.post("/api/story/new", (req, res) => {
       delete fields.password;
       // Store the cover image, if there is one
       let coverImg = files["cover"];
-      if (coverImg.originalFilename) {
+      if (coverImg && coverImg.originalFilename) {
         let newCoverPath = `/${PUBLIC_DB_DIR_NAME}/img/${coverImg.originalFilename}`;
         fields.cover = newCoverPath;
         fs.rename(coverImg.filepath, PUBLIC_DIR + newCoverPath, (err) => {
@@ -161,6 +161,8 @@ app.post("/api/story/new", (req, res) => {
       // Store the metadata and story content
       fields.id = id;
       db.stories[id] = fields;
+      // Add story to user's account
+      db.users[fields.username].createdStories.push(id);
       // Add balance to user's account
       db.users[fields.username].balance += NEW_STORY_REWARD;
       // Write to database
@@ -174,21 +176,7 @@ app.post("/api/story/new", (req, res) => {
 
 // Handle story search request
 app.get("/api/story/search", (req, res) => {
-  let db = getDb();
-  let ids = Object.keys(db.stories);
-  let feed = [];
-  let query = req.query.query;
-  let limit = req.query.limit;
-  if (!limit) limit = 20;
-  for (let i = 0; i < limit && i < ids.length; i++) {
-    let story = db.stories[ids[ids.length - 1 - i]];
-    // Add the story metadata to the results if there was no query
-    // or the title matches the query
-    if (!query || story.title.includes(query)) {
-      delete story.content;
-      feed.push(story);
-    }
-  }
+  let feed = performSearch(req);
   writeToRes(res, 200, "application/json", feed);
 });
 
@@ -265,14 +253,44 @@ app.get("/api/rewards", (req, res) => {
   } else writeToRes(res, 401, "text/html", "Invalid credentials");
 });
 
-// Serve story page
-app.get("/story/:id(\\d+)", (req, res) => {
-  let dbEntry = getDb().stories[req.params.id];
-  if (dbEntry) servePage("/story", res);
+// Serve home page
+app.get("/", (req, res) => {
+  homePage(req, res);
+});
+app.get("/home", (req, res) => {
+  homePage(req, res);
+});
+function homePage(req, res) {
+  let feed = performSearch();
+  servePage("/home", res, { feed: feed });
+}
+
+// Serve search page
+app.get("/search", (req, res) => {
+  let feed = performSearch(req);
+  servePage("/search", res, { query: req.query.query, feed: feed });
+});
+
+// Serve profile page
+app.get("/user/:id", (req, res) => {
+  let db = getDb();
+  let user = db.users[req.params.id];
+  for (let i = 0; i < user.createdStories.length; i++) {
+    let id = user.createdStories[i];
+    user.createdStories[i] = db.stories[id];
+  }
+  if (user) servePage("/profile", res, { metadata: user });
   else servePage("/404", res);
 });
 
-// Serve static pages
+// Serve story page
+app.get("/story/:id(\\d+)", (req, res) => {
+  let dbEntry = getDb().stories[req.params.id];
+  if (dbEntry) servePage("/story", res, { metadata: dbEntry });
+  else servePage("/404", res);
+});
+
+// Serve all other pages staticly
 app.use((req, res) => {
   servePage(req.path, res);
 });
@@ -283,7 +301,7 @@ app.use((req, res) => {
  * @param {http.ServerResponse} res The response object to write to.
  */
 function servePage(path, res, vars, was404) {
-  let file = `${PUBLIC_DIR}/${staticPathMappings[path]}`;
+  let file = `${PUBLIC_DIR}/${pathMappings[path]}`;
   if (fs.existsSync(file)) {
     res.render(file, vars, (err, data) => {
       if (err) throw err;
@@ -310,6 +328,34 @@ function writeToRes(res, status, type, data) {
   else res.writeHead(status);
   if (data) res.write(data);
   res.end();
+}
+
+/**
+ * Performs a search based on the provided request.
+ * @param {http.IncomingRequest} req The request to read search parameters from.
+ * @returns {Array} An array of story metadata.
+ */
+function performSearch(req) {
+  let db = getDb();
+  let ids = Object.keys(db.stories);
+  let feed = [];
+  let query;
+  let limit;
+  if (req && req.query) {
+    query = req.query.query;
+    limit = req.query.limit;
+  }
+  if (!limit) limit = 20;
+  for (let i = 0; i < limit && i < ids.length; i++) {
+    let story = db.stories[ids[ids.length - 1 - i]];
+    // Add the story metadata to the results if there was no query
+    // or the title matches the query
+    if (!query || story.title.includes(query)) {
+      delete story.content;
+      feed.push(story);
+    }
+  }
+  return feed;
 }
 
 /**
@@ -377,9 +423,9 @@ function getDb() {
   let db;
   if (!fs.existsSync(DB_LOCATION)) {
     // The database hasn't been created or has been compromised
-    fs.mkdirSync(DB_DIR);
-    fs.mkdirSync(PUBLIC_DB_DIR);
-    fs.mkdirSync(PUBLIC_DB_DIR + "/img");
+    safeMkdirSync(DB_DIR);
+    safeMkdirSync(PUBLIC_DB_DIR);
+    safeMkdirSync(PUBLIC_DB_DIR + "/img");
     db = "";
   } else db = fs.readFileSync(DB_LOCATION);
   if (db.length == 0) {
@@ -412,6 +458,14 @@ function getUniqueId() {
   let id = Date.now().toString() + currentIds;
   currentIds++;
   return id;
+}
+
+/**
+ * Same as mkdirSync(), except does not create the directory if it already exists.
+ * @param {string} dir The directory to create.
+ */
+function safeMkdirSync(dir) {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 }
 
 /**
