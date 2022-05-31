@@ -45,7 +45,7 @@
             <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Home</h1>
             <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
           </div>
-          <div class="flex snap-x overflow-x-scroll pb-5">
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 pb-5">
             <% if (feed.length > 0) { %> <% for (let i = 0; i < feed.length; i++) { %> <%- include("../partials/storyTile.ejs", { metadata: feed[i] }) %> <% } %> <% } else { %>
             <p class="text-slate-400">No stories yet.</p>
             <% } %>

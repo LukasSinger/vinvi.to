@@ -1,20 +1,23 @@
 let username = localStorage.getItem("username");
+let sideBarState = "loggedOutSidebar";
 if (username) {
   // Delete the logged-out sidebar
   document.getElementById("loggedOutSidebar").remove();
   // Set the username button
   document.getElementById("usernameButton").innerText = username;
+  sideBarState = "loggedInSidebar";
+  // Set the profile link
+  document.querySelector("[data-link-profile]").setAttribute("href", `/user/${username}`);
 } else {
   // Delete the logged-in sidebar
   document.getElementById("loggedInSidebar").remove();
+  sideBarState = "loggedOutSidebar";
 }
 
 function togSideBar() {
-  let sidebar = document.getElementById("sideBar");
-  let profileInfo = document.getElementById("profileInfo");
+  let sidebar = document.getElementById(sideBarState);
+  console.log(sideBarState);
   sidebar.classList.toggle("-translate-x-full");
-  profileInfo.classList.add("hidden");
-  console.log("sideba2r");
 }
 
 let hidden = true;
