@@ -19,7 +19,6 @@ const pathMappings = {
 
 const NEW_USER_BALANCE = 10;
 const MAX_DAILY_REWARDS = 1;
-const NEW_STORY_REWARD = 5;
 const MIN_STORY_COST = 1;
 const COST_PER_WORD = 0.01;
 
@@ -163,8 +162,8 @@ app.post("/api/story/new", (req, res) => {
       db.stories[id] = fields;
       // Add story to user's account
       db.users[fields.username].createdStories.push(id);
-      // Add balance to user's account
-      db.users[fields.username].balance += NEW_STORY_REWARD;
+      // Add balance to user's account based on length of submission
+      db.users[fields.username].balance += fields.cost;
       // Write to database
       saveDb(db);
       writeToRes(res, 205, "text/html", "Submitted successfully");
