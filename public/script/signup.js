@@ -5,5 +5,4 @@ let passwordElement = formElement.querySelector("[name='password']");
 formElement.addEventListener("submit", () => {
   localStorage.setItem("username", usernameElement.value);
   localStorage.setItem("password", passwordElement.value);
-  window.location.reload();
 });

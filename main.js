@@ -107,7 +107,7 @@ app.post("/api/user/new", (req, res) => {
     fields.ownedStories = [];
     db.users[fields.username] = fields;
     saveDb(db);
-    writeToRes(res, 204);
+    redirect(res, "/");
   });
 });
 
@@ -166,7 +166,7 @@ app.post("/api/story/new", (req, res) => {
       db.users[fields.username].balance += fields.cost;
       // Write to database
       saveDb(db);
-      writeToRes(res, 205, "text/html", "Submitted successfully");
+      redirect(res, "/");
     } else {
       writeToRes(res, 401, "text/html", "Invalid credentials");
     }
@@ -326,6 +326,16 @@ function writeToRes(res, status, type, data) {
   if (type) res.writeHead(status, { "Content-Type": type });
   else res.writeHead(status);
   if (data) res.write(data);
+  res.end();
+}
+
+/**
+ * Sends a response instructing the browser to redirect to the specified URL.
+ * @param {http.ServerResponse} res The response to write to.
+ * @param {string} url The URL to redirect the browser to.
+ */
+function redirect(res, url) {
+  res.writeHead(303, { Location: url });
   res.end();
 }
 
