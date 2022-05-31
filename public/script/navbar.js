@@ -1,6 +1,9 @@
-if (localStorage.getItem("username")) {
+let username = localStorage.getItem("username");
+if (username) {
   // Delete the logged-out sidebar
   document.getElementById("loggedOutSidebar").remove();
+  // Set the username button
+  document.getElementById("usernameButton").innerText = username;
 } else {
   // Delete the logged-in sidebar
   document.getElementById("loggedInSidebar").remove();
