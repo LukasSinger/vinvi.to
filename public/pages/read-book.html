@@ -41,7 +41,7 @@
         <!-- section one -->
         <div class="p-5 py-10">
           <div class="flex items-center gap-5 border-b pb-10">
-            <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/publicDb/default.avif' %><% } %>')"></div>
+            <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/img/default-story.avif' %><% } %>')"></div>
             <div>
               <h1 class="truncate pt-2 text-xl font-semibold text-white"><%= metadata.title %></h1>
               <a href="/user/<%= metadata.username %>" class="text-sm text-gray-300 hover:text-accent"><%= metadata.username %></a>
@@ -49,23 +49,26 @@
             </div>
           </div>
           <div class="relative pt-8">
-            <div id="pay" class="absolute top-0 z-10 mt-8 flex h-full w-full flex-col items-center gap-5">
-              <h1 class="text-xl font-semibold text-white">You need to pay for that!</h1>
-              <button class="bg-accent p-2 px-10 duration-300 hover:drop-shadow-[7px_7px_0_#334155]">Buy for <%= metadata.cost %> moons</button>
-            </div>
-            <div id="story" class="select-none space-y-4 blur">
-              <h1 class="text-xl font-semibold text-white">Heading goes here and then you write a little bit</h1>
-              <h2 class="text-lg text-white">Second Heading</h2>
-              <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut eleifend orci. Etiam pharetra consectetur velit, ut elementum nibh elementum et. Curabitur sit amet facilisis libero. Sed et enim metus. Nullam sit amet volutpat massa, in imperdiet risus. Duis nec convallis libero. Donec id tortor vitae leo aliquam accumsan. Integer eget interdum nisl. Aliquam erat volutpat. Sed dapibus congue iaculis. Phasellus nec lacus eu lorem aliquam laoreet. Phasellus ut arcu leo. Nam vulputate, nulla ac scelerisque rutrum, tellus enim tincidunt dolor, nec mollis magna tellus condimentum odio. Pellentesque ac neque felis. Praesent volutpat, ligula quis scelerisque hendrerit, tortor est laoreet ex, ut feugiat arcu libero vel enim.</p>
-              <p class="text-white">Morbi non elit turpis. Quisque ac faucibus odio, nec molestie nibh. Maecenas pretium hendrerit lacus, ut faucibus massa egestas a. Vivamus ligula ante, convallis ac neque quis, sodales vehicula metus. Praesent consectetur nunc metus, quis interdum dolor venenatis ut. Fusce sed ex sollicitudin, porta lectus at, sollicitudin sem. Nulla nulla justo, tincidunt id porttitor sit amet, sodales ut enim. Morbi maximus euismod nunc, nec vehicula nisi vestibulum id. Donec vulputate velit in nisi venenatis venenatis. Nunc volutpat ex eget purus aliquam, eget aliquet justo accumsan.</p>
-              <p class="text-white">Nullam libero erat, posuere eu mauris eu, pulvinar viverra metus. Vestibulum et urna gravida, rhoncus risus et, lobortis enim. Pellentesque gravida varius pretium. Cras quis risus venenatis, lacinia massa vel, accumsan urna. Quisque dolor ipsum, malesuada sed mattis ac, volutpat fringilla justo. Aenean at orci turpis. Suspendisse et arcu nunc. Nulla maximus iaculis iaculis. Integer et commodo ante. Nullam sapien mi, lobortis vitae consectetur ac, accumsan eu odio. Phasellus in ultricies ligula, quis pellentesque lorem. Sed facilisis urna sit amet libero congue accumsan non sit amet lectus. Ut placerat egestas lorem, ut interdum augue vulputate eget. Etiam massa dolor, pharetra malesuada faucibus nec, pretium vel quam. Nulla pulvinar diam at leo tempus, auctor rutrum justo dapibus. Ut quis ipsum lorem.</p>
+            <div class="select-none space-y-4 text-white" data-content="<%= metadata.id %>"></div>
+            <div class="hidden" data-pay>
+              <div id="pay" class="absolute top-0 z-10 mt-8 flex h-full w-full flex-col items-center gap-5">
+                <h1 class="text-xl font-semibold text-white">You need to pay for that!</h1>
+                <button class="bg-accent p-2 px-10 duration-300 hover:drop-shadow-[7px_7px_0_#334155]" data-action-buy>Buy for <%= metadata.cost %> moons</button>
+              </div>
+              <div id="story" class="select-none space-y-4 blur">
+                <h1 class="text-xl font-semibold text-white">Heading goes here and then you write a little bit</h1>
+                <h2 class="text-lg text-white">Second Heading</h2>
+                <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut eleifend orci. Etiam pharetra consectetur velit, ut elementum nibh elementum et. Curabitur sit amet facilisis libero. Sed et enim metus. Nullam sit amet volutpat massa, in imperdiet risus. Duis nec convallis libero. Donec id tortor vitae leo aliquam accumsan. Integer eget interdum nisl. Aliquam erat volutpat. Sed dapibus congue iaculis. Phasellus nec lacus eu lorem aliquam laoreet. Phasellus ut arcu leo. Nam vulputate, nulla ac scelerisque rutrum, tellus enim tincidunt dolor, nec mollis magna tellus condimentum odio. Pellentesque ac neque felis. Praesent volutpat, ligula quis scelerisque hendrerit, tortor est laoreet ex, ut feugiat arcu libero vel enim.</p>
+                <p class="text-white">Morbi non elit turpis. Quisque ac faucibus odio, nec molestie nibh. Maecenas pretium hendrerit lacus, ut faucibus massa egestas a. Vivamus ligula ante, convallis ac neque quis, sodales vehicula metus. Praesent consectetur nunc metus, quis interdum dolor venenatis ut. Fusce sed ex sollicitudin, porta lectus at, sollicitudin sem. Nulla nulla justo, tincidunt id porttitor sit amet, sodales ut enim. Morbi maximus euismod nunc, nec vehicula nisi vestibulum id. Donec vulputate velit in nisi venenatis venenatis. Nunc volutpat ex eget purus aliquam, eget aliquet justo accumsan.</p>
+                <p class="text-white">Nullam libero erat, posuere eu mauris eu, pulvinar viverra metus. Vestibulum et urna gravida, rhoncus risus et, lobortis enim. Pellentesque gravida varius pretium. Cras quis risus venenatis, lacinia massa vel, accumsan urna. Quisque dolor ipsum, malesuada sed mattis ac, volutpat fringilla justo. Aenean at orci turpis. Suspendisse et arcu nunc. Nulla maximus iaculis iaculis. Integer et commodo ante. Nullam sapien mi, lobortis vitae consectetur ac, accumsan eu odio. Phasellus in ultricies ligula, quis pellentesque lorem. Sed facilisis urna sit amet libero congue accumsan non sit amet lectus. Ut placerat egestas lorem, ut interdum augue vulputate eget. Etiam massa dolor, pharetra malesuada faucibus nec, pretium vel quam. Nulla pulvinar diam at leo tempus, auctor rutrum justo dapibus. Ut quis ipsum lorem.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- purchases -->
-      <div class="fixed top-0 left-0 z-50 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60 p-10">
+      <div class="fixed top-0 left-0 z-50 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60 p-10" data-modal-success>
         <div class="fixed m-6 flex h-min flex-col space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
           <div class="relative flex w-fit select-none">
             <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">New Purchase</h1>
@@ -76,7 +79,19 @@
           <button class="h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Read</button>
         </div>
       </div>
+      <!-- you are poor -->
+      <div class="fixed top-0 left-0 z-50 flex hidden h-screen w-full items-center justify-center bg-black bg-opacity-60 p-10" data-modal-fail>
+        <div class="fixed m-6 flex h-min flex-col space-y-4 border-4 border-accent bg-black p-10 drop-shadow-[7px_7px_0_#84cc16]">
+          <div class="relative flex w-fit select-none">
+            <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">You Are Poor</h1>
+            <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
+          </div>
+          <h1 class="text-lg text-white">You don't have enough moons to buy this!</h1>
+
+          <button class="h-10 w-full select-none rounded-sm bg-[#1c1c1c] px-4 text-slate-400 outline-none duration-300 hover:drop-shadow-[7px_7px_0_#84cc16] focus:drop-shadow-[7px_7px_0_#84cc16]">Okay</button>
+        </div>
+      </div>
     </div>
   </div>
-  <script src="../script/vie-story.js"></script>
+  <script src="../script/view-story.js"></script>
 </body>

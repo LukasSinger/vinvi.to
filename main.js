@@ -184,7 +184,7 @@ app.get("/api/story/:id", (req, res) => {
   let db = getDb();
   let dbEntry = db.stories[req.params.id];
   if (dbEntry) {
-    if (userHasAccess(db.users[getReqUser()], dbEntry) && requestHasValidCredentials(req, db)) {
+    if (userHasAccess(db.users[getReqUser(req)], dbEntry) && requestHasValidCredentials(req, db)) {
       writeToRes(res, 200, "application/json", dbEntry);
     } else {
       delete dbEntry.content;
