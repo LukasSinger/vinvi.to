@@ -15,6 +15,7 @@
   },
   "scripts": {
     "start": "npm i && npm run build && cross-env NODE_ENV=production npx pm2 start main.js -i max --attach",
+    "restart": "npx pm2 kill && npm run start",
     "devstart": "npm i && npm run build && nodemon -e js main.js",
     "build": "npx tailwindcss -i public/styles/index.css -o public/dist/output.css",
     "devbuild": "npx tailwindcss -i public/styles/index.css -o public/dist/output.css --watch",
