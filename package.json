@@ -14,9 +14,11 @@
     "tailwindcss": "^3.0.24"
   },
   "scripts": {
-    "start": "git pull && npm i && npm run build && cross-env NODE_ENV=production npx pm2 start main.js -i max --attach",
-    "restart": "git pull && npx pm2 kill && npm run start",
-    "devstart": "npm i && npm run build && nodemon -e js main.js",
+    "start": "npm i && npm run build && cross-env NODE_ENV=production npx pm2 start main.js -f -i 0 --attach",
+    "reload": "npm i && npm run build && npx pm2 reload all",
+    "update": "git pull && npm run reload",
+    "stop": "npx pm2 stop all",
+    "devstart": "npm i && npm run build && nodemon -e js main.js & npm run devbuild",
     "build": "npx tailwindcss -i public/styles/index.css -o public/dist/output.css",
     "devbuild": "npx tailwindcss -i public/styles/index.css -o public/dist/output.css --watch",
     "clearDb": "node clearDb.js"
