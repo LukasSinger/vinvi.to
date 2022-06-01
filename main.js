@@ -11,9 +11,7 @@ const pathMappings = {
   "/home": "pages/home.html",
   "/library": "pages/your-library.html",
   "/new": "pages/start-writing.html",
-  "/profile": "pages/profile.html",
   "/search": "pages/search.html",
-  "/story": "pages/read-book.html",
   "/404": "pages/404.html"
 };
 
@@ -68,6 +66,10 @@ app.get("/api/balance", (req, res) => {
 app.get("/api/library", (req, res) => {
   let db = getDb();
   let user = db.users[getReqUser(req)];
+  for (let i = 0; i < user.ownedStories.length; i++) {
+    let id = user.ownedStories[i];
+    user.ownedStories[i] = db.stories[id];
+  }
   if (requestHasValidCredentials(req, db)) {
     writeToRes(res, 200, "application/json", user.ownedStories);
   } else {
@@ -377,7 +379,7 @@ function performSearch(req) {
 function executeTranscation(user, cost, assetID) {
   if (user.balance < cost) return false;
   user.balance -= cost;
-  user.ownedStories.push(assetID);
+  user.ownedStories.splice(0, 0, assetID);
   return true;
 }
 
