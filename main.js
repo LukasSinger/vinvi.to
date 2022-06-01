@@ -11,7 +11,9 @@ const pathMappings = {
   "/home": "pages/home.html",
   "/library": "pages/your-library.html",
   "/new": "pages/start-writing.html",
+  "/profile": "pages/profile.html",
   "/search": "pages/search.html",
+  "/story": "pages/read-book.html",
   "/404": "pages/404.html"
 };
 
