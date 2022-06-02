@@ -3,7 +3,11 @@ const DB_DIR = "database";
 const PUBLIC_DB_DIR_NAME = "publicDb";
 const PUBLIC_DB_DIR = `${PUBLIC_DIR}/${PUBLIC_DB_DIR_NAME}`;
 const DB_LOCATION = DB_DIR + "/database.json";
+<<<<<<< HEAD
 const HOST = process.env.NODE_ENV ? "vinvi.to" : "localhost";
+=======
+const HOST = process.env.NODE_ENV ? "localhost" : "localhost";
+>>>>>>> c6415869fad902f1fbec4b6d458a11d2551e8293
 const PORT = process.env.NODE_ENV ? 16677 : 16667;
 
 const pathMappings = {
@@ -47,6 +51,8 @@ app
   .listen(PORT, HOST)
   .on("listening", () => {
     console.log("The server is now listening for requests.");
+    if (process.env.NODE_ENV) console.log("You are running the server in production mode.");
+    else console.log("You are running the server in development mode.");
   })
   .on("error", (err) => {
     if (process.env.NODE_ENV) console.log("You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead.");
