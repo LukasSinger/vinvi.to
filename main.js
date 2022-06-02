@@ -47,6 +47,8 @@ app
   .listen(PORT, HOST)
   .on("listening", () => {
     console.log("The server is now listening for requests.");
+    if (process.env.NODE_ENV) console.log("You are running the server in production mode.");
+    else console.log("You are running the server in development mode.");
   })
   .on("error", (err) => {
     if (process.env.NODE_ENV) console.log("You are trying to run the server on an improperly configured machine.\nIf you're just trying to test, use `npm run devstart` instead.");
