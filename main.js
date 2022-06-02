@@ -3,7 +3,7 @@ const DB_DIR = "database";
 const PUBLIC_DB_DIR_NAME = "publicDb";
 const PUBLIC_DB_DIR = `${PUBLIC_DIR}/${PUBLIC_DB_DIR_NAME}`;
 const DB_LOCATION = DB_DIR + "/database.json";
-const HOST = process.env.NODE_ENV ? "saturn.rochesterschools.org" : "localhost";
+const HOST = process.env.NODE_ENV ? "vinvi.to" : "localhost";
 const PORT = process.env.NODE_ENV ? 16677 : 16667;
 
 const pathMappings = {
