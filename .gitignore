@@ -1,5 +1,6 @@
 node_modules
 package-lock.json
 database
-publicDb
+public/publicDb
+public/dist
 .env
