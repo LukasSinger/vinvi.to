@@ -1,6 +1,6 @@
 <div class="group cursor-pointer shrink-0 snap-start p-5">
   <a href="/story/<%= metadata.id %>">
-    <div class="aspect-169 w-full shrink-0 rounded-sm bg-blue-200 bg-cover duration-300 ease-in-out hover:drop-shadow-[7px_7px_0_#84cc16] group-hover:drop-shadow-[7px_7px_0_#84cc16]" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/img/default-story.avif' %><% } %>')"></div>
+    <div class="aspect-169 w-full shrink-0 rounded-sm bg-blue-200 bg-cover duration-300 ease-in-out bg-center hover:drop-shadow-[7px_7px_0_#84cc16] group-hover:drop-shadow-[7px_7px_0_#84cc16]" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/img/default-story.jpg' %><% } %>')"></div>
     <h1 class="truncate pt-2 font-semibold text-white"><%= metadata.title %></h1>
     <p class="text-sm text-gray-400 line-clamp-3"><%= metadata.description %></p>
   </a>

@@ -7,21 +7,22 @@
   <!-- Primary Meta Tags -->
   <title>"<%= metadata.title %>" by <%= metadata.username %> | vinvi.to</title>
   <meta name="title" content='"<%= metadata.title %>" by <%= metadata.username %> | vinvi.to' />
-  <meta name="description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
+  <meta name="description" content="<%= metadata.description %>" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="http://www.vinvi.to/" />
   <meta property="og:title" content='"<%= metadata.title %>" by <%= metadata.username %> | vinvi.to' />
-  <meta property="og:description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
-  <meta property="og:image" content="" />
+  <meta property="og:description" content="<%= metadata.description %>" />
+  <meta property="og:image" content="/img/thumb.jpg" />
+
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="http://www.vinvi.to/" />
   <meta property="twitter:title" content='"<%= metadata.title %>" by <%= metadata.username %> | vinvi.to' />
-  <meta property="twitter:description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
-  <meta property="twitter:image" content="" />
+  <meta property="twitter:description" content="<%= metadata.description %>" />
+  <meta property="twitter:image" content="/img/thumb.jpg" />
 
   <meta name="theme-color" content="#2469df" />
 
@@ -41,7 +42,7 @@
         <!-- section one -->
         <div class="p-5 py-10">
           <div class="flex items-center gap-5 border-b pb-10">
-            <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/img/default-story.avif' %><% } %>')"></div>
+            <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6 bg-center" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/img/default-story.jpg' %><% } %>')"></div>
             <div>
               <h1 class="truncate pt-2 text-xl font-semibold text-white"><%= metadata.title %></h1>
               <a href="/user/<%= metadata.username %>" class="text-sm text-gray-300 hover:text-accent"><%= metadata.username %></a>

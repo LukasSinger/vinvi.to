@@ -14,14 +14,14 @@
   <meta property="og:url" content="http://www.vinvi.to/" />
   <meta property="og:title" content="Start Writing | vinvi.to" />
   <meta property="og:description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
-  <meta property="og:image" content="" />
+  <meta property="og:image" content="/img/thumb.jpg" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="http://www.vinvi.to/" />
   <meta property="twitter:title" content="Start Writing | vinvi.to" />
   <meta property="twitter:description" content="Let your creativity flow while creating your own short stories, or reading others. Vinvi.to encourages interaction between authors with the state of the art marketplace. " />
-  <meta property="twitter:image" content="" />
+  <meta property="twitter:image" content="/img/thumb.jpg" />
 
   <meta name="theme-color" content="#2469df" />
 
@@ -51,15 +51,15 @@
                 <div class="absolute -z-0 h-1/2 w-full translate-y-4 translate-x-3 bg-slate-700"></div>
               </div>
               <div class="flex bg-accent text-center text-white">
-                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H1</button>
-                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H2</button>
-                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">P</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H1</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">H2</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2">P</button>
                 <div class="h-full w-5 bg-white"></div>
-                <button class="w-full bg-gray-900 p-3 font-bold duration-500 hover:-translate-y-2">B</button>
-                <button class="w-full bg-gray-900 p-3 italic duration-500 hover:-translate-y-2">I</button>
-                <button class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
-                <button class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2"><></button>
-                <button class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 font-bold duration-500 hover:-translate-y-2">B</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 italic duration-500 hover:-translate-y-2">I</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 duration-500 hover:-translate-y-2"><></button>
+                <button onclick="richText()" class="w-full bg-gray-900 p-3 line-through duration-500 hover:-translate-y-2">S</button>
               </div>
               <textarea minlength="10" class="peer h-24 w-full resize-none rounded-sm bg-[#1c1c1c] py-2 px-4 pr-10 text-slate-400 outline-none duration-300 placeholder:text-slate-500 focus:drop-shadow-[7px_7px_0_#84cc16]" name="content" placeholder="Content" required></textarea>
             </div>
@@ -80,6 +80,11 @@
         </div>
       </div>
     </div>
+
+    <div id="soon" class="fixed duration-300 translate-x-96 bottom-10 right-10 bg-black drop-shadow-[7px_7px_0_#84cc16] p-3 z-50 border-2 border-accent">
+        <h1 class="z-20 font-titles text-xl font-semibold tracking-widest text-white">Coming Soon</h1>
+    </div>
+    
   </div>
   <script src="../script/new-story.js"></script>
 </body>
