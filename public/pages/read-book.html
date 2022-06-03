@@ -44,7 +44,7 @@
           <div class="flex items-center gap-5 border-b pb-10">
             <div class="aspect-169 w-28 max-w-sm shrink-0 rounded-sm bg-blue-200 bg-cover drop-shadow-[7px_7px_0_#84cc16] duration-300 ease-in-out group-hover:drop-shadow-[7px_7px_0_#84cc16] md:w-1/5 lg:w-1/6 bg-center" style="background-image: url('<% if (metadata.cover) { %><%= metadata.cover %><% } else { %><%= '/img/default-story.jpg' %><% } %>')"></div>
             <div>
-              <h1 class="truncate pt-2 text-xl font-semibold text-white"><%= metadata.title %></h1>
+              <h1 class="pt-2 text-xl font-semibold text-white"><%= metadata.title %></h1>
               <a href="/user/<%= metadata.username %>" class="text-sm text-gray-300 hover:text-accent"><%= metadata.username %></a>
               <h1 class="mt-2 text-gray-400"><%= metadata.description %></h1>
             </div>
