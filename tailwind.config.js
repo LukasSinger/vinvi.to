@@ -1,7 +1,7 @@
 const plugin = require("tailwindcss/plugin");
 
 module.exports = {
-  content: ["public/pages/**/*.{html,js}", "public/partials/signup.ejs", "public/partials/advertisement.ejs", "public/partials/login.ejs", "public/partials/topbar.ejs", "public/partials/storyTile.ejs", "public/partials/settings.ejs", "public/partials/loggedInSidebar.ejs", "public/partials/loggedOutSidebar.ejs"],
+  content: ["public/pages/**/*.{html,js}", "public/partials/signup.ejs", "public/partials/footer.ejs", "public/partials/advertisement.ejs", "public/partials/login.ejs", "public/partials/topbar.ejs", "public/partials/storyTile.ejs", "public/partials/settings.ejs", "public/partials/loggedInSidebar.ejs", "public/partials/loggedOutSidebar.ejs"],
   theme: {
     extend: {
       colors: {

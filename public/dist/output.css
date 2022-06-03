@@ -549,14 +549,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 1.5rem;
 }
 
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mb-3 {
@@ -599,12 +599,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
-.aspect-169 {
-  aspect-ratio: 9 / 13;
-}
-
 .aspect-102 {
   aspect-ratio: 10 / 2;
+}
+
+.aspect-169 {
+  aspect-ratio: 9 / 13;
 }
 
 .h-screen {
@@ -836,6 +836,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-width: 2px;
 }
 
+.border-t {
+  border-top-width: 1px;
+}
+
+.border-t-2 {
+  border-top-width: 2px;
+}
+
 .border-b {
   border-bottom-width: 1px;
 }
@@ -874,14 +882,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(28 28 28 / var(--tw-bg-opacity));
 }
 
-.bg-blue-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
-}
-
 .bg-\[\#080808\] {
   --tw-bg-opacity: 1;
   background-color: rgb(8 8 8 / var(--tw-bg-opacity));
+}
+
+.bg-blue-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
 
 .bg-accent {
@@ -908,18 +916,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 0.6;
 }
 
-.bg-\[url\(\/img\/ad_placeholder\.jpg\)\] {
-  background-image: url(/img/ad_placeholder.jpg);
-}
-
-.bg-\[url\(https\:\/\/cdn\.discordapp\.com\/attachments\/885247954737307688\/982318508924895272\/unknown\.png\)\] {
-  background-image: url(https://cdn.discordapp.com/attachments/885247954737307688/982318508924895272/unknown.png);
-}
-
-.bg-\[url\(https\:\/\/media\.discordapp\.net\/attachments\/885247954737307688\/982318771995803699\/20220603_112355\.jpg\?width\=1440\&height\=480\)\] {
-  background-image: url(https://media.discordapp.net/attachments/885247954737307688/982318771995803699/20220603_112355.jpg?width=1440&height=480);
-}
-
 .bg-\[url\(https\:\/\/media\.discordapp\.net\/attachments\/885247954737307688\/982318771995803699\/20220603_112355\.jpg\)\] {
   background-image: url(https://media.discordapp.net/attachments/885247954737307688/982318771995803699/20220603_112355.jpg);
 }
@@ -936,12 +932,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 2.5rem;
 }
 
-.p-2 {
-  padding: 0.5rem;
-}
-
 .p-5 {
   padding: 1.25rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }
 
 .p-3 {
